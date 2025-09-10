@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Girlfriend - Prophantom Johnnet AI 2.0</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .chat-container {
+            height: 500px;
+            overflow-y: auto;
+        }
+        .message-bubble {
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .typing-indicator {
+            display: none;
+        }
+        .typing-indicator.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-900 via-purple-900 to-indigo-900 min-h-screen text-white">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2">
+                <i class="fas fa-heart text-pink-400 mr-3"></i>
+                AI Girlfriend
+            </h1>
+            <p class="text-xl text-gray-300">Your supportive companion, powered by Phi3 14B</p>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="max-w-4xl mx-auto">
+            <div class="glass-effect rounded-xl p-6 mb-6">
+                <!-- Chat Messages -->
+                <div id="chat-container" class="chat-container mb-4 p-4 bg-black bg-opacity-20 rounded-lg">
+                    <div class="text-center text-gray-400 mb-4">
+                        <p>💙 Hi there! I'm your AI companion. How are you doing today?</p>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div id="typing-indicator" class="typing-indicator text-center text-gray-400 mb-2">
+                    <p><i class="fas fa-circle animate-pulse"></i> AI Girlfriend is typing...</p>
+                </div>
+
+                <!-- Input Area -->
+                <div class="flex space-x-4">
+                    <input 
+                        type="text" 
+                        id="message-input" 
+                        placeholder="Share what's on your mind..." 
+                        class="flex-1 bg-black bg-opacity-30 border border-pink-400 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-pink-300"
+                        maxlength="500"
+                    >
+                    <button 
+                        id="send-btn" 
+                        class="bg-pink-600 hover:bg-pink-500 px-6 py-2 rounded-lg font-semibold transition"
+                    >
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <button class="glass-effect p-4 rounded-lg text-center hover:bg-white hover:bg-opacity-10 transition" onclick="sendQuickMessage('How are you doing?')">
+                    <i class="fas fa-smile text-yellow-400 text-2xl mb-2"></i>
+                    <p class="text-sm">Check In</p>
+                </button>
+                <button class="glass-effect p-4 rounded-lg text-center hover:bg-white hover:bg-opacity-10 transition" onclick="sendQuickMessage('I achieved something today!')">
+                    <i class="fas fa-trophy text-gold-400 text-2xl mb-2"></i>
+                    <p class="text-sm">Celebrate</p>
+                </button>
+                <button class="glass-effect p-4 rounded-lg text-center hover:bg-white hover:bg-opacity-10 transition" onclick="sendQuickMessage('I need some support')">
+                    <i class="fas fa-heart text-red-400 text-2xl mb-2"></i>
+                    <p class="text-sm">Support</p>
+                </button>
+                <button class="glass-effect p-4 rounded-lg text-center hover:bg-white hover:bg-opacity-10 transition" onclick="sendQuickMessage('Tell me something motivational')">
+                    <i class="fas fa-star text-blue-400 text-2xl mb-2"></i>
+                    <p class="text-sm">Inspire Me</p>
+                </button>
+            </div>
+
+            <!-- Stats Panel -->
+            <div class="glass-effect rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-4">
+                    <i class="fas fa-chart-line text-pink-400 mr-2"></i>
+                    Our Journey Together
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-pink-400" id="total-conversations">0</div>
+                        <div class="text-sm text-gray-400">Conversations</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-purple-400" id="relationship-level">Getting to Know</div>
+                        <div class="text-sm text-gray-400">Relationship Level</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-blue-400" id="days-together">0</div>
+                        <div class="text-sm text-gray-400">Days Together</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script>
+        // Initialize Socket.IO
+        const socket = io();
+        
+        // DOM elements
+        const chatContainer = document.getElementById('chat-container');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const typingIndicator = document.getElementById('typing-indicator');
+        
+        // Connect to companion
+        socket.emit('join_companion');
+        
+        // Send message function
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat
+            addMessage(message, 'user');
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Show typing indicator
+            showTyping();
+            
+            // Send to server
+            socket.emit('companion_message', {
+                message: message,
+                message_id: Date.now()
+            });
+        }
+        
+        // Quick message function
+        function sendQuickMessage(message) {
+            messageInput.value = message;
+            sendMessage();
+        }
+        
+        // Add message to chat
+        function addMessage(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `mb-4 ${sender === 'user' ? 'text-right' : 'text-left'}`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = `message-bubble inline-block p-3 rounded-lg ${
+                sender === 'user' 
+                ? 'bg-pink-600 text-white' 
+                : 'bg-gray-700 text-gray-100'
+            }`;
+            bubble.textContent = message;
+            
+            messageDiv.appendChild(bubble);
+            chatContainer.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // Show typing indicator
+        function showTyping() {
+            typingIndicator.classList.add('active');
+        }
+        
+        // Hide typing indicator
+        function hideTyping() {
+            typingIndicator.classList.remove('active');
+        }
+        
+        // Socket event handlers
+        socket.on('companion_response', function(data) {
+            hideTyping();
+            addMessage(data.response, 'ai');
+        });
+        
+        socket.on('companion_joined', function(data) {
+            console.log('Connected to AI Girlfriend:', data.message);
+        });
+        
+        socket.on('error', function(data) {
+            hideTyping();
+            addMessage('Sorry, there was an error: ' + data.message, 'system');
+        });
+        
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Load stats on page load
+        window.addEventListener('load', function() {
+            fetch('/agents/ai-girlfriend/stats')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.total_conversations !== undefined) {
+                        document.getElementById('total-conversations').textContent = data.total_conversations;
+                    }
+                    if (data.relationship_level !== undefined) {
+                        document.getElementById('relationship-level').textContent = data.relationship_level.level || 'Getting to Know';
+                    }
+                    if (data.days_together !== undefined) {
+                        document.getElementById('days-together').textContent = data.days_together;
+                    }
+                })
+                .catch(error => console.log('Stats loading error:', error));
+        });
+    </script>
+</body>
+</html>

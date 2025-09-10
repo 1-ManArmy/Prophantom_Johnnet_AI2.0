@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prophantom Johnnet AI 2.0 - The Sovereign Gateway</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .hover-glow:hover {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+        .agent-card {
+            transition: all 0.3s ease;
+            transform: perspective(1000px) rotateX(0deg);
+        }
+        .agent-card:hover {
+            transform: perspective(1000px) rotateX(5deg) scale(1.05);
+        }
+        .hero-text {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="glass-effect fixed w-full z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-brain text-2xl text-blue-400"></i>
+                <span class="font-bold text-xl">Prophantom Johnnet AI 2.0</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#home" class="hover:text-blue-400 transition">Home</a>
+                <a href="#agents" class="hover:text-blue-400 transition">Agents</a>
+                <a href="#features" class="hover:text-blue-400 transition">Features</a>
+                <a href="#pricing" class="hover:text-blue-400 transition">Pricing</a>
+                <a href="/docs" class="hover:text-blue-400 transition">Docs</a>
+            </div>
+            <div class="flex space-x-3">
+                <a href="/auth/login" class="px-4 py-2 border border-blue-400 rounded hover:bg-blue-400 transition">Login</a>
+                <a href="/auth/register" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500 transition">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="gradient-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-20 left-20 w-64 h-64 bg-blue-500 rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl"></div>
+        </div>
+        
+        <div class="text-center z-10 max-w-4xl mx-auto px-6">
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 hero-text">
+                The Sovereign <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Gateway</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-gray-300">
+                Where rituals begin and legends deploy. Nine specialized AI agents working in perfect harmony.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                <button class="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded-lg text-lg font-semibold hover-glow transition">
+                    <i class="fas fa-rocket mr-2"></i> Start Your Journey
+                </button>
+                <button class="glass-effect px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:bg-opacity-10 transition">
+                    <i class="fas fa-play mr-2"></i> Watch Demo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agent Showcase -->
+    <section id="agents" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Nine Legendary Agents</h2>
+                <p class="text-xl text-gray-400">Each agent is a specialist in its domain, powered by cutting-edge AI models</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- AI Girlfriend -->
+                <div class="agent-card glass-effect p-6 rounded-xl hover-glow">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-heart text-4xl text-pink-400 mb-3"></i>
+                        <h3 class="text-2xl font-bold text-pink-400">AI Girlfriend</h3>
+                        <p class="text-sm text-gray-400">Powered by Phi3 14B</p>
+                    </div>
+                    <p class="text-gray-300 mb-4">Companion-grade module. Deeply intuitive, remembers your rituals, celebrates wins, and provides emotional support.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-circle mr-1"></i> Active
+                        </span>
+                        <a href="/agents/ai-girlfriend" class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- EmoAI -->
+                <div class="agent-card glass-effect p-6 rounded-xl hover-glow">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-smile text-4xl text-yellow-400 mb-3"></i>
+                        <h3 class="text-2xl font-bold text-yellow-400">EmoAI</h3>
+                        <p class="text-sm text-gray-400">Powered by Gemma2 2B</p>
+                    </div>
+                    <p class="text-gray-300 mb-4">Sentiment decoder. Reads the vibe, tunes the tone, and ensures every interaction has emotional resonance.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-circle mr-1"></i> Active
+                        </span>
+                        <a href="/agents/emo-ai" class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- PDFMind -->
+                <div class="agent-card glass-effect p-6 rounded-xl hover-glow">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-file-pdf text-4xl text-red-400 mb-3"></i>
+                        <h3 class="text-2xl font-bold text-red-400">PDFMind</h3>
+                        <p class="text-sm text-gray-400">Powered by Qwen2.5 7B</p>
+                    </div>
+                    <p class="text-gray-300 mb-4">Document intelligence. Extracts insights, summarizes content, and transforms documents into knowledge.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-circle mr-1"></i> Active
+                        </span>
+                        <a href="/agents/pdf-mind" class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ChatRevive -->
+                <div class="agent-card glass-effect p-6 rounded-xl hover-glow">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-comments text-4xl text-green-400 mb-3"></i>
+                        <h3 class="text-2xl font-bold text-green-400">ChatRevive</h3>
+                        <p class="text-sm text-gray-400">Powered by Mistral 7B</p>
+                    </div>
+                    <p class="text-gray-300 mb-4">Conversation enhancer. Revives dead chats, suggests engaging topics, and keeps conversations flowing.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-circle mr-1"></i> Active
+                        </span>
+                        <a href="/agents/chat-revive" class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- TokBoost -->
+                <div class="agent-card glass-effect p-6 rounded-xl hover-glow">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-rocket text-4xl text-purple-400 mb-3"></i>
+                        <h3 class="text-2xl font-bold text-purple-400">TokBoost</h3>
+                        <p class="text-sm text-gray-400">Powered by Llama3.2 3B</p>
+                    </div>
+                    <p class="text-gray-300 mb-4">Social media optimizer. Creates viral content, boosts engagement, and maximizes your online presence.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-circle mr-1"></i> Active
+                        </span>
+                        <a href="/agents/tok-boost" class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- YouGen -->
+                <div class="agent-card glass-effect p-6 rounded-xl hover-glow">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-magic text-4xl text-indigo-400 mb-3"></i>
+                        <h3 class="text-2xl font-bold text-indigo-400">YouGen</h3>
+                        <p class="text-sm text-gray-400">Powered by DeepSeek-Coder 6.7B</p>
+                    </div>
+                    <p class="text-gray-300 mb-4">Content generator. Creates high-quality, original content across multiple formats and domains.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-circle mr-1"></i> Active
+                        </span>
+                        <a href="/agents/you-gen" class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- AgentX -->
+                <div class="agent-card glass-effect p-6 rounded-xl hover-glow">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-secret text-4xl text-orange-400 mb-3"></i>
+                        <h3 class="text-2xl font-bold text-orange-400">AgentX</h3>
+                        <p class="text-sm text-gray-400">Powered by Yi 6B</p>
+                    </div>
+                    <p class="text-gray-300 mb-4">The mysterious specialist. Handles complex multi-domain tasks with unmatched versatility and precision.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-circle mr-1"></i> Active
+                        </span>
+                        <a href="/agents/agent-x" class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- AutoChat -->
+                <div class="agent-card glass-effect p-6 rounded-xl hover-glow">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-robot text-4xl text-teal-400 mb-3"></i>
+                        <h3 class="text-2xl font-bold text-teal-400">AutoChat</h3>
+                        <p class="text-sm text-gray-400">Powered by Mathstral 7B</p>
+                    </div>
+                    <p class="text-gray-300 mb-4">Automated assistant. Provides quick, accurate responses and handles routine inquiries with efficiency.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-circle mr-1"></i> Active
+                        </span>
+                        <a href="/agents/auto-chat" class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CVSmash -->
+                <div class="agent-card glass-effect p-6 rounded-xl hover-glow">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-briefcase text-4xl text-cyan-400 mb-3"></i>
+                        <h3 class="text-2xl font-bold text-cyan-400">CVSmash</h3>
+                        <p class="text-sm text-gray-400">Powered by LLaVA 7B</p>
+                    </div>
+                    <p class="text-gray-300 mb-4">Career optimizer. Analyzes resumes, suggests improvements, and matches skills to opportunities.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-circle mr-1"></i> Active
+                        </span>
+                        <a href="/agents/cv-smash" class="text-blue-400 hover:text-blue-300">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Mythic Capabilities</h2>
+                <p class="text-xl text-gray-400">Built for the future, available today</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="glass-effect w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bolt text-3xl text-yellow-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Lightning Fast</h3>
+                    <p class="text-gray-400">Powered by optimized Ollama models for instant responses</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="glass-effect w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-3xl text-green-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Secure & Private</h3>
+                    <p class="text-gray-400">Your data stays safe with enterprise-grade security</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="glass-effect w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-brain text-3xl text-purple-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Adaptive Learning</h3>
+                    <p class="text-gray-400">AI that learns and improves from every interaction</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="glass-effect w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-plug text-3xl text-blue-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">API Integration</h3>
+                    <p class="text-gray-400">Seamlessly integrate with your existing workflow</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 gradient-bg">
+        <div class="max-w-4xl mx-auto text-center px-6">
+            <h2 class="text-4xl font-bold mb-6">Ready to Begin Your Legend?</h2>
+            <p class="text-xl mb-8 text-gray-300">Join thousands of users who have already discovered the power of our AI ecosystem</p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="/auth/register" class="bg-white text-gray-900 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition">
+                    <i class="fas fa-user-plus mr-2"></i> Create Account
+                </a>
+                <a href="/dashboard" class="glass-effect px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:bg-opacity-10 transition">
+                    <i class="fas fa-tachometer-alt mr-2"></i> View Dashboard
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-brain text-2xl text-blue-400"></i>
+                        <span class="font-bold text-xl">Prophantom AI</span>
+                    </div>
+                    <p class="text-gray-400">The sovereign gateway to AI-powered productivity and creativity.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Platform</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/platform" class="hover:text-white transition">Overview</a></li>
+                        <li><a href="/agents" class="hover:text-white transition">Agents</a></li>
+                        <li><a href="/docs" class="hover:text-white transition">Documentation</a></li>
+                        <li><a href="/pricing" class="hover:text-white transition">Pricing</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/about" class="hover:text-white transition">About</a></li>
+                        <li><a href="/blog" class="hover:text-white transition">Blog</a></li>
+                        <li><a href="/contact" class="hover:text-white transition">Contact</a></li>
+                        <li><a href="/careers" class="hover:text-white transition">Careers</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/help" class="hover:text-white transition">Help Center</a></li>
+                        <li><a href="/community" class="hover:text-white transition">Community</a></li>
+                        <li><a href="/status" class="hover:text-white transition">Status</a></li>
+                        <li><a href="/security" class="hover:text-white transition">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Prophantom Johnnet AI 2.0. All rights reserved. | Built with ❤️ and AI</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('bg-black', 'bg-opacity-50');
+            } else {
+                nav.classList.remove('bg-black', 'bg-opacity-50');
+            }
+        });
+
+        // Agent card hover effects
+        document.querySelectorAll('.agent-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'perspective(1000px) rotateX(5deg) scale(1.05)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'perspective(1000px) rotateX(0deg) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

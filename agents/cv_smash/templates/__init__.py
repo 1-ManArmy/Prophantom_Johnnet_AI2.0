@@ -1,0 +1,1 @@
+# CvSmash Templates Module

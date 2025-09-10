@@ -1,0 +1,1 @@
+# AI Girlfriend Agent - Companion-grade module

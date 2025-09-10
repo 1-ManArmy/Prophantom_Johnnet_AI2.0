@@ -1,0 +1,31 @@
+# Core Flask dependencies
+Flask==2.3.3
+Flask-SocketIO==5.3.6
+
+# Database
+sqlite3
+
+# HTTP requests for Ollama
+requests==2.31.0
+
+# Utility libraries
+python-dotenv==1.0.0
+werkzeug==2.3.7
+
+# Additional utilities
+PyYAML==6.0.1
+python-dateutil==2.8.2
+
+# Development dependencies
+pytest==7.4.2
+pytest-flask==1.2.0
+
+# Production server
+gunicorn==21.2.0
+
+# Optional: For enhanced functionality
+numpy==1.24.3
+pandas==2.0.3
+
+# Security
+cryptography==41.0.4

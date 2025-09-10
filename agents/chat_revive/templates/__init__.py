@@ -1,0 +1,1 @@
+# ChatRevive Templates Module

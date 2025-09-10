@@ -1,0 +1,67 @@
+# Auto Chat Agent Tuning Configuration
+
+# Model Configuration
+model:
+  primary: "phi3:14b"
+  analysis: "gemma2:2b"
+  creative: "qwen2.5:7b"
+  embedding: "nomic-embed-text"
+
+# Response Parameters
+response:
+  temperature: 0.7
+  max_tokens: 150
+  top_p: 0.9
+  frequency_penalty: 0.1
+  presence_penalty: 0.1
+
+# Personality Configuration
+personality:
+  warmth: 0.8
+  humor: 0.6
+  formality: 0.3
+  empathy: 0.8
+  enthusiasm: 0.7
+  patience: 0.9
+
+# Conversation Flow
+conversation:
+  max_context_messages: 10
+  response_delay_min: 0.5
+  response_delay_max: 3.0
+  proactive_message_threshold: 300  # seconds
+  engagement_tracking: true
+
+# Learning Configuration
+learning:
+  feedback_weight:
+    explicit: 1.0
+    implicit: 0.7
+    behavioral: 0.5
+  pattern_threshold: 0.7
+  learning_rate: 0.1
+  max_patterns: 1000
+
+# Auto Chat Specific Settings
+auto_chat:
+  enable_predictions: true
+  enable_proactive: true
+  enable_sentiment_analysis: true
+  conversation_timeout: 1800  # 30 minutes
+  max_daily_interactions: 200
+
+# Performance Monitoring
+monitoring:
+  track_response_time: true
+  track_user_satisfaction: true
+  track_engagement_metrics: true
+  analytics_retention_days: 30
+
+# Safety and Filters
+safety:
+  content_filter: true
+  inappropriate_response_filter: true
+  spam_detection: true
+  rate_limiting:
+    max_messages_per_minute: 30
+    max_messages_per_hour: 500

@@ -1,0 +1,1 @@
+# CVSmash Agent - CV and resume optimizer

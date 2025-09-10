@@ -1,0 +1,76 @@
+# Content Generation And Creative Writing Assistant Configuration
+
+# Model Configuration
+model:
+  primary: "mistral:7b"
+  analysis: "qwen2.5:7b"
+  creative: "phi3:14b"
+  embedding: "nomic-embed-text"
+
+# Specialization Settings
+specialization:
+  focus: "content_generation"
+  features: ['creative_writing', 'content_planning', 'style_adaptation']
+  expertise_level: "expert"
+  domain_knowledge: "comprehensive"
+
+# Response Parameters
+response:
+  temperature: 0.7
+  analysis_temperature: 0.3
+  creative_temperature: 0.9
+  max_tokens: 300
+  top_p: 0.9
+  frequency_penalty: 0.1
+  presence_penalty: 0.1
+
+# YouGen Specific Settings
+you_gen:
+  enable_specialization: true
+  enable_advanced_analysis: true
+  enable_creative_solutions: true
+  enable_real_time_processing: true
+  max_context_length: 15
+  specialization_threshold: 0.8
+
+# Performance Configuration
+performance:
+  response_timeout: 30
+  analysis_timeout: 45
+  creative_timeout: 60
+  max_concurrent_requests: 10
+  cache_responses: true
+  cache_duration: 300
+
+# Learning and Adaptation
+learning:
+  enable_continuous_learning: true
+  feedback_integration: true
+  pattern_recognition: true
+  user_adaptation: true
+  specialization_improvement: true
+
+# Safety and Quality
+safety:
+  content_validation: true
+  specialization_accuracy_check: true
+  output_quality_threshold: 0.8
+  error_recovery: true
+  rate_limiting:
+    max_requests_per_minute: 60
+    max_requests_per_hour: 1000
+
+# Analytics and Monitoring
+analytics:
+  track_specialization_effectiveness: true
+  track_user_satisfaction: true
+  track_feature_usage: true
+  track_response_quality: true
+  retention_days: 30
+
+# Integration Settings
+integration:
+  websocket_enabled: true
+  api_enabled: true
+  batch_processing: false
+  streaming_responses: true

@@ -1,0 +1,1 @@
+# EmoAI Agent - Sentiment decoder and emotional intelligence
