@@ -2,15 +2,1253 @@
 
 {% block title %}ChatRevive - Conversation Revival Agent{% endblock %}
 
+{% block extra_css %}
+<style>
+    :root {
+        --chat-primary: #f59e0b;
+        --chat-secondary: #eab308;
+        --chat-accent: #d97706;
+        --chat-success: #10b981;
+        --chat-warning: #ef4444;
+        --chat-info: #3b82f6;
+        --chat-purple: #8b5cf6;
+        
+        --chat-bg-primary: #1a1b2e;
+        --chat-bg-secondary: #16213e;
+        --chat-bg-glass: rgba(245, 158, 11, 0.05);
+        --chat-border: rgba(245, 158, 11, 0.2);
+        --chat-text-primary: #e2e8f0;
+        --chat-text-secondary: #94a3b8;
+        --chat-shadow: 0 8px 32px rgba(245, 158, 11, 0.15);
+    }
+
+    .revive-container {
+        min-height: 100vh;
+        background: radial-gradient(ellipse at top, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom left, rgba(234, 179, 8, 0.1) 0%, transparent 50%);
+    }
+
+    .chat-interface {
+        display: grid;
+        grid-template-columns: 300px 1fr 300px;
+        height: 100vh;
+        gap: 1px;
+        background: var(--chat-border);
+    }
+
+    /* Analysis Panel */
+    .analysis-panel {
+        background: var(--chat-bg-secondary);
+        border-right: 1px solid var(--chat-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .conversation-upload {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--chat-border);
+    }
+
+    .upload-area {
+        border: 2px dashed var(--chat-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: var(--chat-bg-glass);
+    }
+
+    .upload-area:hover {
+        border-color: var(--chat-primary);
+        background: rgba(245, 158, 11, 0.1);
+    }
+
+    .conversation-stats {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--chat-border);
+    }
+
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .stat-card {
+        background: var(--chat-bg-glass);
+        border: 1px solid var(--chat-border);
+        border-radius: 10px;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--chat-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--chat-text-secondary);
+    }
+
+    .conversation-health {
+        padding: 1.5rem;
+    }
+
+    .health-meter {
+        background: var(--chat-bg-glass);
+        border: 1px solid var(--chat-border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .health-score {
+        font-size: 2rem;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .health-indicators {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .health-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+    }
+
+    .health-bar {
+        width: 80px;
+        height: 4px;
+        background: var(--chat-bg-glass);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .health-fill {
+        height: 100%;
+        border-radius: 2px;
+        transition: width 0.3s ease;
+    }
+
+    /* Main Chat Area */
+    .chat-main {
+        background: var(--chat-bg-primary);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .chat-header {
+        background: var(--chat-bg-secondary);
+        padding: 1rem 2rem;
+        border-bottom: 1px solid var(--chat-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .agent-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .agent-avatar {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--chat-primary), var(--chat-secondary));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: var(--chat-shadow);
+    }
+
+    .agent-status {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--chat-text-secondary);
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--chat-success);
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .chat-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .control-btn {
+        background: var(--chat-bg-glass);
+        border: 1px solid var(--chat-border);
+        color: var(--chat-text-primary);
+        padding: 0.75rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+        background: var(--chat-primary);
+        border-color: var(--chat-primary);
+    }
+
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .message {
+        display: flex;
+        gap: 1rem;
+        max-width: 85%;
+        animation: slideUp 0.3s ease;
+    }
+
+    .message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--chat-primary), var(--chat-secondary));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .message.user .message-avatar {
+        background: linear-gradient(135deg, var(--chat-info), var(--chat-purple));
+    }
+
+    .message-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .message-bubble {
+        background: var(--chat-bg-glass);
+        border: 1px solid var(--chat-border);
+        padding: 1rem 1.25rem;
+        border-radius: 18px;
+        color: var(--chat-text-primary);
+        line-height: 1.5;
+        backdrop-filter: blur(10px);
+    }
+
+    .message.user .message-bubble {
+        background: linear-gradient(135deg, var(--chat-primary), var(--chat-secondary));
+        border: none;
+        color: white;
+    }
+
+    .revival-suggestion {
+        background: var(--chat-bg-glass);
+        border: 1px solid var(--chat-border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .revival-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--chat-primary);
+        margin-bottom: 0.75rem;
+    }
+
+    .revival-content {
+        color: var(--chat-text-secondary);
+        line-height: 1.5;
+    }
+
+    .message-time {
+        font-size: 0.75rem;
+        color: var(--chat-text-secondary);
+        margin-top: 0.25rem;
+    }
+
+    .chat-input-area {
+        background: var(--chat-bg-secondary);
+        border-top: 1px solid var(--chat-border);
+        padding: 1.5rem 2rem;
+    }
+
+    .input-container {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .input-group {
+        flex: 1;
+        position: relative;
+    }
+
+    .chat-input {
+        width: 100%;
+        background: var(--chat-bg-glass);
+        border: 1px solid var(--chat-border);
+        color: var(--chat-text-primary);
+        padding: 1rem 1.25rem;
+        border-radius: 15px;
+        resize: none;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.5;
+        min-height: 50px;
+        max-height: 150px;
+        backdrop-filter: blur(10px);
+    }
+
+    .chat-input:focus {
+        outline: none;
+        border-color: var(--chat-primary);
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
+
+    .input-actions {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .input-btn {
+        background: none;
+        border: none;
+        color: var(--chat-text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .input-btn:hover {
+        color: var(--chat-primary);
+        background: var(--chat-bg-glass);
+    }
+
+    .send-btn {
+        background: linear-gradient(135deg, var(--chat-primary), var(--chat-secondary));
+        border: none;
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .send-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--chat-shadow);
+    }
+
+    /* Sidebar */
+    .chat-sidebar {
+        background: var(--chat-bg-secondary);
+        border-left: 1px solid var(--chat-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .sidebar-panel {
+        border-bottom: 1px solid var(--chat-border);
+    }
+
+    .panel-header {
+        padding: 1rem 1.5rem;
+        background: var(--chat-bg-glass);
+        color: var(--chat-text-primary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid var(--chat-border);
+    }
+
+    .panel-content {
+        padding: 1.5rem;
+    }
+
+    .topic-suggestions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .topic-btn {
+        background: var(--chat-bg-glass);
+        border: 1px solid var(--chat-border);
+        color: var(--chat-text-primary);
+        padding: 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .topic-btn:hover {
+        background: var(--chat-primary);
+        border-color: var(--chat-primary);
+        transform: translateY(-1px);
+    }
+
+    .topic-btn strong {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .topic-btn span {
+        font-size: 0.85rem;
+        color: var(--chat-text-secondary);
+    }
+
+    .revival-tools {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .tool-btn {
+        background: var(--chat-bg-glass);
+        border: 1px solid var(--chat-border);
+        color: var(--chat-text-primary);
+        padding: 0.75rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .tool-btn:hover {
+        background: var(--chat-primary);
+        border-color: var(--chat-primary);
+        transform: translateY(-2px);
+    }
+
+    .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: var(--chat-text-secondary);
+    }
+
+    .setting-toggle {
+        width: 40px;
+        height: 20px;
+        background: var(--chat-bg-glass);
+        border: 1px solid var(--chat-border);
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .setting-toggle::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: var(--chat-text-secondary);
+        border-radius: 50%;
+        top: 1px;
+        left: 1px;
+        transition: all 0.3s ease;
+    }
+
+    .setting-toggle.active {
+        background: var(--chat-primary);
+        border-color: var(--chat-primary);
+    }
+
+    .setting-toggle.active::after {
+        background: white;
+        transform: translateX(20px);
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: var(--chat-bg-glass);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--chat-primary), var(--chat-secondary));
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .highlight-text {
+        color: var(--chat-primary);
+        font-weight: 600;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .chat-interface {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr;
+        }
+        
+        .analysis-panel,
+        .chat-sidebar {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .messages-container {
+            padding: 1rem;
+        }
+        
+        .message {
+            max-width: 95%;
+        }
+        
+        .chat-input-area {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="hero-section fade-in" style="padding: 8rem 0 6rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(234, 179, 8, 0.1)); border-radius: 30px; margin: 2rem; border: 1px solid rgba(245, 158, 11, 0.3); text-align: center;">
-        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #f59e0b, #eab308); border-radius: 25px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white; margin: 0 auto 2rem; box-shadow: 0 20px 60px rgba(245, 158, 11, 0.4);">
-            <i class="fas fa-comments"></i>
+<div class="revive-container">
+    <div class="chat-interface">
+        <!-- Analysis Panel -->
+        <div class="analysis-panel">
+            <div class="conversation-upload">
+                <div class="panel-header">
+                    <i class="fas fa-upload"></i>
+                    Upload Chat
+                </div>
+                
+                <div class="upload-area" onclick="document.getElementById('chatInput').click()">
+                    <input type="file" id="chatInput" style="display: none;" accept=".txt,.json,.csv" onchange="handleChatUpload(event)">
+                    <i class="fas fa-file-upload" style="font-size: 2rem; color: var(--chat-primary); margin-bottom: 0.5rem;"></i>
+                    <div style="font-weight: 600; margin-bottom: 0.25rem;">Drop Chat History</div>
+                    <div style="font-size: 0.85rem; opacity: 0.7;">TXT, JSON, CSV supported</div>
+                </div>
+            </div>
+
+            <div class="conversation-stats">
+                <div class="panel-header">
+                    <i class="fas fa-chart-bar"></i>
+                    Chat Analytics
+                </div>
+                
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="messageCount">247</div>
+                        <div class="stat-label">Messages</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="participantCount">2</div>
+                        <div class="stat-label">Participants</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="durationDays">15</div>
+                        <div class="stat-label">Days Active</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgResponse">2.3h</div>
+                        <div class="stat-label">Avg Response</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="conversation-health">
+                <div class="panel-header">
+                    <i class="fas fa-heartbeat"></i>
+                    Conversation Health
+                </div>
+                
+                <div class="health-meter">
+                    <div class="health-score" style="color: var(--chat-primary);">78%</div>
+                    <div style="text-align: center; color: var(--chat-text-secondary); font-size: 0.9rem;">Needs Revival</div>
+                </div>
+
+                <div class="health-indicators">
+                    <div class="health-item">
+                        <span>Engagement</span>
+                        <div class="health-bar">
+                            <div class="health-fill" style="width: 60%; background: linear-gradient(90deg, #f59e0b, #eab308);"></div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span>Response Rate</span>
+                        <div class="health-bar">
+                            <div class="health-fill" style="width: 85%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span>Topic Diversity</span>
+                        <div class="health-bar">
+                            <div class="health-fill" style="width: 45%; background: linear-gradient(90deg, #ef4444, #dc2626);"></div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span>Emotional Tone</span>
+                        <div class="health-bar">
+                            <div class="health-fill" style="width: 70%; background: linear-gradient(90deg, #8b5cf6, #7c3aed);"></div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span>Question Frequency</span>
+                        <div class="health-bar">
+                            <div class="health-fill" style="width: 35%; background: linear-gradient(90deg, #ef4444, #dc2626);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <h1 class="page-title">ChatRevive</h1>
-        <p class="page-subtitle">Breathe New Life Into Your Conversations</p>
-        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Analyze conversation patterns, suggest engaging topics, and revive stagnant discussions with intelligent conversation coaching.</p>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="agent-info">
+                    <div class="agent-avatar">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="agent-status">
+                        <h2 style="margin: 0; font-size: 1.2rem;">ChatRevive</h2>
+                        <div class="status-indicator">
+                            <div class="status-dot"></div>
+                            <span>Analyzing conversation patterns</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-controls">
+                    <button class="control-btn" onclick="toggleAnalysisMode()" title="Deep Analysis Mode">
+                        <i class="fas fa-search" id="analysisIcon"></i>
+                    </button>
+                    <button class="control-btn" onclick="generateSuggestions()" title="Generate Revival Suggestions">
+                        <i class="fas fa-lightbulb"></i>
+                    </button>
+                    <button class="control-btn" onclick="exportAnalysis()" title="Export Analysis">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="control-btn" onclick="clearChat()" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="message ai">
+                    <div class="message-avatar">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Welcome to ChatRevive! I'm your conversation revival specialist. I can analyze your chat patterns, identify why conversations die out, and suggest specific strategies to keep discussions engaging and flowing. Upload a chat history or describe a conversation challenge you're facing.
+                        </div>
+                        <div class="revival-suggestion">
+                            <div class="revival-header">
+                                <i class="fas fa-chart-line"></i>
+                                Initial Assessment
+                            </div>
+                            <div class="revival-content">
+                                Based on sample data, I can see this conversation has <span class="highlight-text">moderate engagement</span> but could benefit from:
+                                <br>• More open-ended questions (currently 35% of messages)
+                                <br>• Diversifying topics beyond surface-level chat
+                                <br>• Increasing emotional depth and vulnerability
+                                <br>• Adding more shared experiences and activities
+                            </div>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chat-input-area">
+                <div class="input-container">
+                    <div class="input-group">
+                        <textarea 
+                            id="messageInput" 
+                            class="chat-input" 
+                            placeholder="Describe your conversation challenge or ask for revival strategies..."
+                            rows="1"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button class="input-btn" onclick="analyzeChat()" title="Analyze Sample Chat">
+                                <i class="fas fa-microscope"></i>
+                            </button>
+                            <button class="input-btn" onclick="suggestTopics()" title="Topic Suggestions">
+                                <i class="fas fa-comments"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="chat-sidebar">
+            <!-- Topic Suggestions -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-lightbulb"></i>
+                    Revival Topics
+                </div>
+                <div class="panel-content">
+                    <div class="topic-suggestions">
+                        <button class="topic-btn" onclick="useTopic('memories')">
+                            <strong>🌟 Shared Memories</strong>
+                            <span>"What's your favorite memory of us?"</span>
+                        </button>
+                        <button class="topic-btn" onclick="useTopic('dreams')">
+                            <strong>💭 Dreams & Goals</strong>
+                            <span>"If you could do anything next year..."</span>
+                        </button>
+                        <button class="topic-btn" onclick="useTopic('hypothetical')">
+                            <strong>🤔 Hypothetical Scenarios</strong>
+                            <span>"Would you rather..." questions</span>
+                        </button>
+                        <button class="topic-btn" onclick="useTopic('deep')">
+                            <strong>🎭 Deep Questions</strong>
+                            <span>"What's something you've never told me?"</span>
+                        </button>
+                        <button class="topic-btn" onclick="useTopic('current')">
+                            <strong>📰 Current Events</strong>
+                            <span>Discuss news, trends, opinions</span>
+                        </button>
+                        <button class="topic-btn" onclick="useTopic('creative')">
+                            <strong>🎨 Creative Exercises</strong>
+                            <span>Story building, word games</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revival Tools -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-tools"></i>
+                    Revival Tools
+                </div>
+                <div class="panel-content">
+                    <div class="revival-tools">
+                        <button class="tool-btn" onclick="runTool('icebreaker')">
+                            <i class="fas fa-snowflake"></i>
+                            <span>Icebreaker</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('energy')">
+                            <i class="fas fa-bolt"></i>
+                            <span>Energy Boost</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('depth')">
+                            <i class="fas fa-diving"></i>
+                            <span>Go Deeper</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('humor')">
+                            <i class="fas fa-laugh"></i>
+                            <span>Add Humor</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('activity')">
+                            <i class="fas fa-gamepad"></i>
+                            <span>Activities</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('empathy')">
+                            <i class="fas fa-heart"></i>
+                            <span>Empathy</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversation Patterns -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-pattern"></i>
+                    Detected Patterns
+                </div>
+                <div class="panel-content">
+                    <div class="setting-item">
+                        <span>Response Delay</span>
+                        <strong style="color: var(--chat-warning);">High</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Message Length</span>
+                        <strong style="color: var(--chat-primary);">Short</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Question Rate</span>
+                        <strong style="color: var(--chat-warning);">Low</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Emoji Usage</span>
+                        <strong style="color: var(--chat-success);">Good</strong>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Revival Progress</span>
+                            <span style="color: var(--chat-primary);">65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </div>
+                <div class="panel-content">
+                    <div class="setting-item">
+                        <span>Auto-Analysis</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Smart Suggestions</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Privacy Mode</span>
+                        <div class="setting-toggle" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Learning Mode</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    // Initialize Socket.IO
+    const socket = io();
+    
+    // Global variables
+    let analysisMode = false;
+    let messageCount = 0;
+    let currentChatData = null;
+    
+    // Socket events
+    socket.emit('join_room', 'chat_revive');
+    
+    socket.on('ai_response', function(data) {
+        addMessage(data.message, 'ai', data.revival_analysis);
+        updateConversationStats(data.stats);
+    });
+    
+    socket.on('revival_suggestions', function(data) {
+        addRevivalSuggestions(data.suggestions, data.strategies);
+    });
+    
+    // Message functions
+    function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        addMessage(message, 'user');
+        input.value = '';
+        
+        socket.emit('user_message', {
+            message: message,
+            chat_data: currentChatData,
+            analysis_mode: analysisMode,
+            agent: 'chat_revive'
+        });
+        
+        adjustTextareaHeight(input);
+    }
+    
+    function addMessage(content, sender, revivalData = null) {
+        const container = document.getElementById('messagesContainer');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        let suggestionHtml = '';
+        if (revivalData) {
+            suggestionHtml = `
+                <div class="revival-suggestion">
+                    <div class="revival-header">
+                        <i class="fas fa-magic"></i>
+                        Revival Strategy
+                    </div>
+                    <div class="revival-content">
+                        <strong>Analysis:</strong> ${revivalData.analysis}<br>
+                        <strong>Suggestion:</strong> <span class="highlight-text">${revivalData.suggestion}</span><br>
+                        <strong>Expected Outcome:</strong> ${revivalData.outcome}
+                    </div>
+                </div>
+            `;
+        }
+        
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                <i class="fas fa-${sender === 'user' ? 'user' : 'comments'}"></i>
+            </div>
+            <div class="message-content">
+                <div class="message-bubble">${content}</div>
+                ${suggestionHtml}
+                <div class="message-time">${timeStr}</div>
+            </div>
+        `;
+        
+        container.appendChild(messageDiv);
+        container.scrollTop = container.scrollHeight;
+        messageCount++;
+    }
+    
+    // Chat analysis functions
+    function handleChatUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const chatText = e.target.result;
+            analyzeChatData(chatText, file.name);
+        };
+        reader.readAsText(file);
+    }
+    
+    function analyzeChatData(chatText, filename) {
+        // Simulate chat analysis
+        currentChatData = {
+            filename: filename,
+            content: chatText,
+            messageCount: Math.floor(Math.random() * 500) + 100,
+            participants: Math.floor(Math.random() * 3) + 2,
+            duration: Math.floor(Math.random() * 30) + 5
+        };
+        
+        addMessage(`📊 Successfully analyzed "${filename}". Found ${currentChatData.messageCount} messages from ${currentChatData.participants} participants over ${currentChatData.duration} days.`, 'ai', {
+            analysis: 'Conversation shows declining engagement patterns with repetitive topics',
+            suggestion: 'Introduce more open-ended questions and shared activities',
+            outcome: 'Expected 40% increase in response rate and message depth'
+        });
+        
+        updateAnalysisPanel();
+    }
+    
+    function updateAnalysisPanel() {
+        if (!currentChatData) return;
+        
+        document.getElementById('messageCount').textContent = currentChatData.messageCount;
+        document.getElementById('participantCount').textContent = currentChatData.participants;
+        document.getElementById('durationDays').textContent = currentChatData.duration;
+        document.getElementById('avgResponse').textContent = (Math.random() * 5 + 0.5).toFixed(1) + 'h';
+    }
+    
+    // Topic and tool functions
+    function useTopic(topic) {
+        const topics = {
+            memories: "Let's dive into some memories! What's a moment we shared that always makes you smile when you think about it?",
+            dreams: "I'm curious about your dreams - if you could wake up tomorrow and have any skill or ability, what would it be and why?",
+            hypothetical: "Here's a fun question: Would you rather have the ability to read minds or travel through time? And what's the first thing you'd do with that power?",
+            deep: "I want to know you better - what's something about yourself that you think would surprise me?",
+            current: "What's something happening in the world right now that you have strong feelings about? I'd love to hear your perspective.",
+            creative: "Let's create something together! I'll start a story and you continue: 'The old bookstore had been closed for years, but tonight, there was a light on inside...'"
+        };
+        
+        document.getElementById('messageInput').value = topics[topic];
+        document.getElementById('messageInput').focus();
+    }
+    
+    function runTool(tool) {
+        const tools = {
+            icebreaker: () => {
+                addMessage('🧊 Icebreaker activated! Try this conversation starter: "If you could have dinner with anyone, living or dead, who would it be and what would you ask them?"', 'ai', {
+                    analysis: 'Icebreakers help reset stagnant conversations',
+                    suggestion: 'Use open-ended questions about preferences and dreams',
+                    outcome: 'Creates new conversation threads and reveals interests'
+                });
+            },
+            energy: () => {
+                addMessage('⚡ Energy boost time! Share something exciting: "What\'s the most exciting thing that happened to you this week, even if it seems small?" or "If you won a free trip anywhere, where would you go right now?"', 'ai', {
+                    analysis: 'Low energy conversations need enthusiasm injection',
+                    suggestion: 'Focus on positive, exciting topics and future plans',
+                    outcome: 'Increases emotional engagement and conversation pace'
+                });
+            },
+            depth: () => {
+                addMessage('🏊 Going deeper! Try: "What\'s something you\'ve been thinking about a lot lately?" or "Tell me about a time when you felt really proud of yourself."', 'ai', {
+                    analysis: 'Surface-level chat needs emotional depth',
+                    suggestion: 'Ask about feelings, thoughts, and personal experiences',
+                    outcome: 'Creates stronger emotional connection and trust'
+                });
+            },
+            humor: () => {
+                addMessage('😄 Humor injection! Share a funny story, ask "What\'s the weirdest food combination you actually enjoy?" or "What\'s your most embarrassing autocorrect fail?"', 'ai', {
+                    analysis: 'Conversations lack lightness and fun',
+                    suggestion: 'Add playful questions and share amusing experiences',
+                    outcome: 'Reduces tension and creates positive associations'
+                });
+            },
+            activity: () => {
+                addMessage('🎮 Activity time! Suggest: "Want to play 20 questions?" or "Let\'s both take a photo of our view right now" or "What if we both try a new recipe this week?"', 'ai', {
+                    analysis: 'Passive conversations need active engagement',
+                    suggestion: 'Propose shared activities and interactive games',
+                    outcome: 'Creates shared experiences and ongoing conversation topics'
+                });
+            },
+            empathy: () => {
+                addMessage('❤️ Empathy mode! Ask: "How are you really doing lately?" or "Is there anything you\'ve been stressed about that you want to talk through?" Show genuine concern and active listening.', 'ai', {
+                    analysis: 'Conversation lacks emotional support',
+                    suggestion: 'Show vulnerability and offer emotional support',
+                    outcome: 'Deepens trust and emotional intimacy'
+                });
+            }
+        };
+        
+        if (tools[tool]) {
+            tools[tool]();
+        }
+    }
+    
+    // Control functions
+    function toggleAnalysisMode() {
+        analysisMode = !analysisMode;
+        const icon = document.getElementById('analysisIcon');
+        
+        if (analysisMode) {
+            icon.className = 'fas fa-search text-yellow-400';
+            addMessage('🔬 Deep analysis mode activated. I\'ll provide detailed conversation pattern analysis and specific psychological insights behind revival strategies.', 'ai');
+            document.querySelector('.status-indicator span').textContent = 'Deep analysis mode active';
+        } else {
+            icon.className = 'fas fa-search';
+            addMessage('📊 Standard analysis mode. I\'ll focus on quick, actionable conversation revival tips.', 'ai');
+            document.querySelector('.status-indicator span').textContent = 'Analyzing conversation patterns';
+        }
+    }
+    
+    function generateSuggestions() {
+        addMessage('💡 Generating personalized revival suggestions based on current conversation patterns...', 'ai');
+        
+        setTimeout(() => {
+            addMessage('Here are 3 targeted strategies for your conversation:', 'ai', {
+                analysis: 'Detected patterns: short responses, declining frequency, surface topics',
+                suggestion: '1. Ask about emotions behind recent events\n2. Share a vulnerable personal story\n3. Suggest a virtual activity together',
+                outcome: 'These strategies address emotional distance and create new interaction opportunities'
+            });
+        }, 2000);
+    }
+    
+    function analyzeChat() {
+        const sampleAnalysis = {
+            messageCount: 247,
+            avgLength: 12.4,
+            questionRate: 0.35,
+            responseTime: '2.3h',
+            sentiment: 0.6,
+            topics: ['daily life', 'work', 'weather'],
+            engagement: 'declining'
+        };
+        
+        addMessage('🔍 Analyzing sample conversation patterns...', 'ai', {
+            analysis: `Found ${sampleAnalysis.messageCount} messages with ${sampleAnalysis.avgLength} avg words. Question rate: ${sampleAnalysis.questionRate}%`,
+            suggestion: 'Increase question frequency and introduce new topic categories',
+            outcome: 'Improved engagement and conversation sustainability'
+        });
+    }
+    
+    function suggestTopics() {
+        const topicSuggestions = [
+            'Childhood memories and family stories',
+            'Travel dreams and bucket list destinations',
+            'Personal growth and life lessons learned',
+            'Creative projects and hobbies',
+            'Philosophical questions about life',
+            'Shared future plans and goals'
+        ];
+        
+        const randomTopics = topicSuggestions.sort(() => 0.5 - Math.random()).slice(0, 3);
+        addMessage(`🎯 Here are some engaging topic suggestions:\n• ${randomTopics.join('\n• ')}`, 'ai');
+    }
+    
+    function exportAnalysis() {
+        const analysisData = {
+            date: new Date().toISOString(),
+            messageCount: messageCount,
+            conversationHealth: 78,
+            patterns: {
+                responseRate: 85,
+                engagementLevel: 60,
+                topicDiversity: 45,
+                emotionalTone: 70,
+                questionFrequency: 35
+            },
+            suggestions: [
+                'Increase open-ended questions',
+                'Introduce shared activities',
+                'Add more emotional depth',
+                'Diversify conversation topics'
+            ]
+        };
+        
+        const blob = new Blob([JSON.stringify(analysisData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chatrevive_analysis_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        addMessage('📊 Conversation analysis exported successfully!', 'ai');
+    }
+    
+    function clearChat() {
+        if (confirm('Are you sure you want to clear this analysis session?')) {
+            document.getElementById('messagesContainer').innerHTML = '';
+            messageCount = 0;
+            addMessage('Welcome back to ChatRevive! I\'m ready to help you analyze and revive your conversations.', 'ai');
+        }
+    }
+    
+    function toggleSetting(toggle) {
+        toggle.classList.toggle('active');
+    }
+    
+    function adjustTextareaHeight(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 150) + 'px';
+    }
+    
+    function updateConversationStats(stats) {
+        if (stats) {
+            document.getElementById('messageCount').textContent = stats.messages || '247';
+            document.getElementById('participantCount').textContent = stats.participants || '2';
+            document.getElementById('avgResponse').textContent = stats.avgResponse || '2.3h';
+        }
+    }
+    
+    // Event listeners
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    
+    document.getElementById('messageInput').addEventListener('input', function() {
+        adjustTextareaHeight(this);
+    });
+    
+    // Drag and drop for chat upload
+    const uploadArea = document.querySelector('.upload-area');
+    
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--chat-primary)';
+        uploadArea.style.background = 'var(--chat-bg-glass)';
+    });
+    
+    uploadArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--chat-border)';
+        uploadArea.style.background = 'transparent';
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = 'var(--chat-border)';
+        uploadArea.style.background = 'transparent';
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            document.getElementById('chatInput').files = files;
+            handleChatUpload({ target: { files: files } });
+        }
+    });
+    
+    // Initialize on page load
+    window.addEventListener('load', function() {
+        document.getElementById('messageInput').focus();
+    });
+</script>
 {% endblock %}

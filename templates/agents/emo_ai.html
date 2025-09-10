@@ -4,39 +4,1238 @@
 
 {% block extra_css %}
 <style>
-    .hero-section {
-        padding: 8rem 0 6rem;
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
-        border-radius: 30px;
-        margin: 2rem;
-        border: 1px solid rgba(139, 92, 246, 0.3);
+    :root {
+        --emo-primary: #8b5cf6;
+        --emo-secondary: #3b82f6;
+        --emo-accent: #06b6d4;
+        --emo-warm: #f59e0b;
+        --emo-success: #10b981;
+        --emo-love: #ec4899;
+        --emo-calm: #84cc16;
+        --emo-energy: #f97316;
+        
+        --emo-bg-primary: #1a1b2e;
+        --emo-bg-secondary: #16213e;
+        --emo-bg-glass: rgba(139, 92, 246, 0.05);
+        --emo-border: rgba(139, 92, 246, 0.2);
+        --emo-text-primary: #e2e8f0;
+        --emo-text-secondary: #94a3b8;
+        --emo-shadow: 0 8px 32px rgba(139, 92, 246, 0.15);
+    }
+
+    .emo-container {
+        min-height: 100vh;
+        background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+    }
+
+    .chat-interface {
+        display: grid;
+        grid-template-columns: 280px 1fr 320px;
+        height: 100vh;
+        gap: 1px;
+        background: var(--emo-border);
+    }
+
+    /* Mood Panel */
+    .mood-panel {
+        background: var(--emo-bg-secondary);
+        border-right: 1px solid var(--emo-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .mood-tracker {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--emo-border);
+    }
+
+    .current-mood {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .mood-display {
+        font-size: 4rem;
+        margin-bottom: 0.5rem;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .mood-label {
+        font-weight: 600;
+        color: var(--emo-text-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .mood-description {
+        font-size: 0.85rem;
+        color: var(--emo-text-secondary);
+    }
+
+    .mood-selector {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .mood-btn {
+        background: var(--emo-bg-glass);
+        border: 1px solid var(--emo-border);
+        border-radius: 12px;
+        padding: 0.75rem 0.5rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
         text-align: center;
     }
 
-    .hero-icon {
-        width: 100px;
-        height: 100px;
-        background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-        border-radius: 25px;
+    .mood-btn:hover,
+    .mood-btn.active {
+        background: var(--emo-primary);
+        border-color: var(--emo-primary);
+        transform: scale(1.05);
+    }
+
+    .mood-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+    }
+
+    .stat-bar {
+        width: 60px;
+        height: 4px;
+        background: var(--emo-bg-glass);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .stat-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--emo-primary), var(--emo-secondary));
+        border-radius: 2px;
+        transition: width 0.3s ease;
+    }
+
+    /* Main Chat Area */
+    .chat-main {
+        background: var(--emo-bg-primary);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .chat-header {
+        background: var(--emo-bg-secondary);
+        padding: 1rem 2rem;
+        border-bottom: 1px solid var(--emo-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .agent-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .agent-avatar {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--emo-primary), var(--emo-secondary));
+        border-radius: 15px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 3rem;
+        font-size: 1.5rem;
         color: white;
-        margin: 0 auto 2rem;
-        box-shadow: 0 20px 60px rgba(139, 92, 246, 0.4);
+        box-shadow: var(--emo-shadow);
+    }
+
+    .agent-status {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--emo-text-secondary);
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--emo-success);
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .chat-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .control-btn {
+        background: var(--emo-bg-glass);
+        border: 1px solid var(--emo-border);
+        color: var(--emo-text-primary);
+        padding: 0.75rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+        background: var(--emo-primary);
+        border-color: var(--emo-primary);
+    }
+
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .message {
+        display: flex;
+        gap: 1rem;
+        max-width: 85%;
+        animation: slideUp 0.3s ease;
+    }
+
+    .message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--emo-primary), var(--emo-secondary));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .message.user .message-avatar {
+        background: linear-gradient(135deg, var(--emo-warm), var(--emo-energy));
+    }
+
+    .message-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .message-bubble {
+        background: var(--emo-bg-glass);
+        border: 1px solid var(--emo-border);
+        padding: 1rem 1.25rem;
+        border-radius: 18px;
+        color: var(--emo-text-primary);
+        line-height: 1.5;
+        backdrop-filter: blur(10px);
+    }
+
+    .message.user .message-bubble {
+        background: linear-gradient(135deg, var(--emo-primary), var(--emo-secondary));
+        border: none;
+        color: white;
+    }
+
+    .emotion-result {
+        background: var(--emo-bg-glass);
+        border: 1px solid var(--emo-border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .emotion-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--emo-primary);
+        margin-bottom: 0.75rem;
+    }
+
+    .emotion-content {
+        color: var(--emo-text-secondary);
+        line-height: 1.5;
+    }
+
+    .message-time {
+        font-size: 0.75rem;
+        color: var(--emo-text-secondary);
+        margin-top: 0.25rem;
+    }
+
+    .chat-input-area {
+        background: var(--emo-bg-secondary);
+        border-top: 1px solid var(--emo-border);
+        padding: 1.5rem 2rem;
+    }
+
+    .input-container {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .input-group {
+        flex: 1;
+        position: relative;
+    }
+
+    .chat-input {
+        width: 100%;
+        background: var(--emo-bg-glass);
+        border: 1px solid var(--emo-border);
+        color: var(--emo-text-primary);
+        padding: 1rem 1.25rem;
+        border-radius: 15px;
+        resize: none;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.5;
+        min-height: 50px;
+        max-height: 150px;
+        backdrop-filter: blur(10px);
+    }
+
+    .chat-input:focus {
+        outline: none;
+        border-color: var(--emo-primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .input-actions {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .input-btn {
+        background: none;
+        border: none;
+        color: var(--emo-text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .input-btn:hover {
+        color: var(--emo-primary);
+        background: var(--emo-bg-glass);
+    }
+
+    .send-btn {
+        background: linear-gradient(135deg, var(--emo-primary), var(--emo-secondary));
+        border: none;
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .send-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--emo-shadow);
+    }
+
+    /* Sidebar */
+    .chat-sidebar {
+        background: var(--emo-bg-secondary);
+        border-left: 1px solid var(--emo-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .sidebar-panel {
+        border-bottom: 1px solid var(--emo-border);
+    }
+
+    .panel-header {
+        padding: 1rem 1.5rem;
+        background: var(--emo-bg-glass);
+        color: var(--emo-text-primary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid var(--emo-border);
+    }
+
+    .panel-content {
+        padding: 1.5rem;
+    }
+
+    .therapy-techniques {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .technique-btn {
+        background: var(--emo-bg-glass);
+        border: 1px solid var(--emo-border);
+        color: var(--emo-text-primary);
+        padding: 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .technique-btn:hover {
+        background: var(--emo-primary);
+        border-color: var(--emo-primary);
+        transform: translateY(-1px);
+    }
+
+    .technique-btn strong {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .technique-btn span {
+        font-size: 0.85rem;
+        color: var(--emo-text-secondary);
+    }
+
+    .wellness-tools {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .tool-btn {
+        background: var(--emo-bg-glass);
+        border: 1px solid var(--emo-border);
+        color: var(--emo-text-primary);
+        padding: 0.75rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .tool-btn:hover {
+        background: var(--emo-primary);
+        border-color: var(--emo-primary);
+        transform: translateY(-2px);
+    }
+
+    .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: var(--emo-text-secondary);
+    }
+
+    .setting-toggle {
+        width: 40px;
+        height: 20px;
+        background: var(--emo-bg-glass);
+        border: 1px solid var(--emo-border);
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .setting-toggle::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: var(--emo-text-secondary);
+        border-radius: 50%;
+        top: 1px;
+        left: 1px;
+        transition: all 0.3s ease;
+    }
+
+    .setting-toggle.active {
+        background: var(--emo-primary);
+        border-color: var(--emo-primary);
+    }
+
+    .setting-toggle.active::after {
+        background: white;
+        transform: translateX(20px);
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: var(--emo-bg-glass);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--emo-primary), var(--emo-secondary));
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .highlight-text {
+        color: var(--emo-primary);
+        font-weight: 600;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .chat-interface {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr;
+        }
+        
+        .mood-panel,
+        .chat-sidebar {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .messages-container {
+            padding: 1rem;
+        }
+        
+        .message {
+            max-width: 95%;
+        }
+        
+        .chat-input-area {
+            padding: 1rem;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="hero-section fade-in">
-        <div class="hero-icon">
-            <i class="fas fa-brain"></i>
+<div class="emo-container">
+    <div class="chat-interface">
+        <!-- Mood Panel -->
+        <div class="mood-panel">
+            <div class="mood-tracker">
+                <div class="panel-header">
+                    <i class="fas fa-heart"></i>
+                    Mood Tracker
+                </div>
+                
+                <div class="current-mood">
+                    <div class="mood-display" id="currentMoodEmoji">😊</div>
+                    <div class="mood-label" id="currentMoodLabel">Content</div>
+                    <div class="mood-description" id="currentMoodDesc">Feeling balanced and peaceful</div>
+                </div>
+
+                <div class="mood-selector">
+                    <button class="mood-btn" onclick="selectMood(this, '😊', 'Content', 'Feeling balanced and peaceful')" title="Content">😊</button>
+                    <button class="mood-btn" onclick="selectMood(this, '😔', 'Sad', 'Feeling down or melancholy')" title="Sad">😔</button>
+                    <button class="mood-btn" onclick="selectMood(this, '😰', 'Anxious', 'Feeling worried or stressed')" title="Anxious">😰</button>
+                    <button class="mood-btn" onclick="selectMood(this, '😤', 'Angry', 'Feeling frustrated or upset')" title="Angry">😤</button>
+                    <button class="mood-btn" onclick="selectMood(this, '😴', 'Tired', 'Feeling exhausted or drained')" title="Tired">😴</button>
+                    <button class="mood-btn" onclick="selectMood(this, '🤔', 'Confused', 'Feeling uncertain or puzzled')" title="Confused">🤔</button>
+                    <button class="mood-btn" onclick="selectMood(this, '🥳', 'Excited', 'Feeling energetic and happy')" title="Excited">🥳</button>
+                    <button class="mood-btn" onclick="selectMood(this, '😌', 'Calm', 'Feeling serene and at peace')" title="Calm">😌</button>
+                </div>
+
+                <div class="mood-stats">
+                    <div class="stat-item">
+                        <span>Stress Level</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" style="width: 30%; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span>Energy</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" style="width: 70%; background: linear-gradient(90deg, #f59e0b, #d97706);"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span>Happiness</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" style="width: 85%; background: linear-gradient(90deg, #ec4899, #be185d);"></div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span>Focus</span>
+                        <div class="stat-bar">
+                            <div class="stat-fill" style="width: 60%; background: linear-gradient(90deg, #8b5cf6, #7c3aed);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <h1 class="page-title">EmoAI</h1>
-        <p class="page-subtitle">Advanced Emotional Intelligence & Mental Wellness</p>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="agent-info">
+                    <div class="agent-avatar">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="agent-status">
+                        <h2 style="margin: 0; font-size: 1.2rem;">EmoAI</h2>
+                        <div class="status-indicator">
+                            <div class="status-dot"></div>
+                            <span>Analyzing emotional patterns</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-controls">
+                    <button class="control-btn" onclick="toggleTherapyMode()" title="Therapy Mode" id="therapyBtn">
+                        <i class="fas fa-user-md"></i>
+                    </button>
+                    <button class="control-btn" onclick="startMeditationSession()" title="Start Meditation">
+                        <i class="fas fa-leaf"></i>
+                    </button>
+                    <button class="control-btn" onclick="exportMoodLog()" title="Export Mood Log">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="control-btn" onclick="clearChat()" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="message ai">
+                    <div class="message-avatar">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Hello! I'm EmoAI, your emotional intelligence companion. I'm here to help you understand your emotions, develop coping strategies, and support your mental wellness journey. I notice you're feeling content today - that's wonderful! How can I support you right now?
+                        </div>
+                        <div class="emotion-result">
+                            <div class="emotion-header">
+                                <i class="fas fa-heart"></i>
+                                Emotional Analysis
+                            </div>
+                            <div class="emotion-content">
+                                Based on your current mood selection, I can see you're in a <span class="highlight-text">balanced emotional state</span>. This is a great foundation for personal reflection or goal-setting. Would you like to explore maintaining this positive state or work on any specific areas?
+                            </div>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chat-input-area">
+                <div class="input-container">
+                    <div class="input-group">
+                        <textarea 
+                            id="messageInput" 
+                            class="chat-input" 
+                            placeholder="Share what's on your mind or how you're feeling..."
+                            rows="1"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button class="input-btn" onclick="activateVoiceInput()" title="Voice Input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button class="input-btn" onclick="openEmotionWheel()" title="Emotion Wheel">
+                                <i class="fas fa-palette"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="chat-sidebar">
+            <!-- Therapy Techniques -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-tools"></i>
+                    Coping Techniques
+                </div>
+                <div class="panel-content">
+                    <div class="therapy-techniques">
+                        <button class="technique-btn" onclick="startTechnique('breathing')">
+                            <strong>🌬️ Deep Breathing</strong>
+                            <span>4-7-8 breathing for instant calm</span>
+                        </button>
+                        <button class="technique-btn" onclick="startTechnique('grounding')">
+                            <strong>🌱 Grounding Exercise</strong>
+                            <span>5-4-3-2-1 sensory technique</span>
+                        </button>
+                        <button class="technique-btn" onclick="startTechnique('progressive')">
+                            <strong>💪 Progressive Relaxation</strong>
+                            <span>Release tension muscle by muscle</span>
+                        </button>
+                        <button class="technique-btn" onclick="startTechnique('mindfulness')">
+                            <strong>🧘 Mindfulness Moment</strong>
+                            <span>Present-moment awareness</span>
+                        </button>
+                        <button class="technique-btn" onclick="startTechnique('cognitive')">
+                            <strong>🧠 Thought Reframing</strong>
+                            <span>Challenge negative thoughts</span>
+                        </button>
+                        <button class="technique-btn" onclick="startTechnique('gratitude')">
+                            <strong>🙏 Gratitude Practice</strong>
+                            <span>Focus on positive aspects</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wellness Tools -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-spa"></i>
+                    Wellness Tools
+                </div>
+                <div class="panel-content">
+                    <div class="wellness-tools">
+                        <button class="tool-btn" onclick="runTool('journal')">
+                            <i class="fas fa-book"></i>
+                            <span>Journal</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('meditation')">
+                            <i class="fas fa-leaf"></i>
+                            <span>Meditate</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('affirmations')">
+                            <i class="fas fa-star"></i>
+                            <span>Affirmations</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('goals')">
+                            <i class="fas fa-target"></i>
+                            <span>Goals</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('habits')">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Habits</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('insights')">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Insights</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wellness Progress -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-chart-line"></i>
+                    Your Progress
+                </div>
+                <div class="panel-content">
+                    <div class="setting-item">
+                        <span>Sessions This Week</span>
+                        <strong style="color: var(--emo-primary);">12</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Mood Entries</span>
+                        <strong style="color: var(--emo-primary);">45</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Techniques Practiced</span>
+                        <strong style="color: var(--emo-primary);">8</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Wellness Score</span>
+                        <strong style="color: var(--emo-success);">87%</strong>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Weekly Goal Progress</span>
+                            <span style="color: var(--emo-primary);">75%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-cog"></i>
+                    Preferences
+                </div>
+                <div class="panel-content">
+                    <div class="setting-item">
+                        <span>Therapy Mode</span>
+                        <div class="setting-toggle" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Mood Reminders</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Daily Check-ins</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Crisis Support</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    // Initialize Socket.IO
+    const socket = io();
+    
+    // Global variables
+    let currentMood = { emoji: '😊', label: 'Content', description: 'Feeling balanced and peaceful' };
+    let therapyMode = false;
+    let messageCount = 0;
+    let sessionStartTime = new Date();
+    
+    // Socket events
+    socket.emit('join_room', 'emo_ai');
+    
+    socket.on('ai_response', function(data) {
+        addMessage(data.message, 'ai', data.emotion_analysis);
+        updateWellnessStats();
+    });
+    
+    socket.on('technique_guidance', function(data) {
+        startTechniqueGuidance(data.technique, data.steps);
+    });
+    
+    // Mood functions
+    function selectMood(button, emoji, label, description) {
+        // Remove active class from all mood buttons
+        document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // Update current mood
+        currentMood = { emoji, label, description };
+        document.getElementById('currentMoodEmoji').textContent = emoji;
+        document.getElementById('currentMoodLabel').textContent = label;
+        document.getElementById('currentMoodDesc').textContent = description;
+        
+        // Update status
+        document.querySelector('.status-indicator span').textContent = `Understanding your ${label.toLowerCase()} mood`;
+        
+        // Send mood update to AI
+        socket.emit('mood_update', {
+            mood: currentMood,
+            timestamp: new Date().toISOString(),
+            agent: 'emo_ai'
+        });
+        
+        addMessage(`I've noticed you're feeling ${label.toLowerCase()}. ${description}. This is completely valid - all emotions serve a purpose. Would you like to explore what might be contributing to this feeling or discuss some coping strategies?`, 'ai', {
+            detected_emotion: label,
+            confidence: 0.95,
+            suggestions: [`Practice self-compassion`, `Explore underlying causes`, `Use coping techniques`]
+        });
+    }
+    
+    // Message functions
+    function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        addMessage(message, 'user');
+        input.value = '';
+        
+        socket.emit('user_message', {
+            message: message,
+            current_mood: currentMood,
+            therapy_mode: therapyMode,
+            session_duration: Math.floor((new Date() - sessionStartTime) / 60000),
+            agent: 'emo_ai'
+        });
+        
+        adjustTextareaHeight(input);
+    }
+    
+    function addMessage(content, sender, emotionAnalysis = null) {
+        const container = document.getElementById('messagesContainer');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        let analysisHtml = '';
+        if (emotionAnalysis) {
+            analysisHtml = `
+                <div class="emotion-result">
+                    <div class="emotion-header">
+                        <i class="fas fa-heart"></i>
+                        Emotional Insight
+                    </div>
+                    <div class="emotion-content">
+                        <strong>Detected emotion:</strong> <span class="highlight-text">${emotionAnalysis.detected_emotion || 'Neutral'}</span><br>
+                        ${emotionAnalysis.suggestions ? emotionAnalysis.suggestions.map(s => `• ${s}`).join('<br>') : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                <i class="fas fa-${sender === 'user' ? 'user' : 'brain'}"></i>
+            </div>
+            <div class="message-content">
+                <div class="message-bubble">${content}</div>
+                ${analysisHtml}
+                <div class="message-time">${timeStr}</div>
+            </div>
+        `;
+        
+        container.appendChild(messageDiv);
+        container.scrollTop = container.scrollHeight;
+        messageCount++;
+    }
+    
+    // Therapy technique functions
+    function startTechnique(technique) {
+        const techniques = {
+            breathing: {
+                title: '4-7-8 Breathing Exercise',
+                steps: [
+                    'Sit comfortably and close your eyes',
+                    'Exhale completely through your mouth',
+                    'Inhale through nose for 4 counts',
+                    'Hold breath for 7 counts',
+                    'Exhale through mouth for 8 counts',
+                    'Repeat 3-4 times'
+                ]
+            },
+            grounding: {
+                title: '5-4-3-2-1 Grounding Technique',
+                steps: [
+                    'Name 5 things you can see',
+                    'Name 4 things you can touch',
+                    'Name 3 things you can hear',
+                    'Name 2 things you can smell',
+                    'Name 1 thing you can taste'
+                ]
+            },
+            progressive: {
+                title: 'Progressive Muscle Relaxation',
+                steps: [
+                    'Start with your toes, tense for 5 seconds',
+                    'Release and notice the relaxation',
+                    'Move to your calves, repeat',
+                    'Continue up through your body',
+                    'Finish with facial muscles',
+                    'Take a moment to feel completely relaxed'
+                ]
+            },
+            mindfulness: {
+                title: 'Mindfulness Meditation',
+                steps: [
+                    'Focus on your breath naturally',
+                    'Notice thoughts without judgment',
+                    'Gently return focus to breathing',
+                    'Observe present moment sensations',
+                    'Continue for 5-10 minutes'
+                ]
+            },
+            cognitive: {
+                title: 'Thought Reframing Exercise',
+                steps: [
+                    'Identify the negative thought',
+                    'Ask: "Is this thought realistic?"',
+                    'Consider alternative perspectives',
+                    'Find evidence against the thought',
+                    'Replace with a balanced thought'
+                ]
+            },
+            gratitude: {
+                title: 'Gratitude Practice',
+                steps: [
+                    'Think of 3 things you\'re grateful for today',
+                    'Consider why each one matters to you',
+                    'Feel the positive emotion fully',
+                    'Write them down if possible',
+                    'Return to this feeling throughout the day'
+                ]
+            }
+        };
+        
+        const tech = techniques[technique];
+        if (!tech) return;
+        
+        let stepsHtml = tech.steps.map((step, index) => 
+            `<div style="margin: 0.5rem 0; padding: 0.5rem; background: var(--emo-bg-glass); border-radius: 8px;">${index + 1}. ${step}</div>`
+        ).join('');
+        
+        addMessage(`Let's try the <span class="highlight-text">${tech.title}</span>. Follow these steps at your own pace:`, 'ai');
+        
+        // Add technique guidance as a separate message
+        setTimeout(() => {
+            const container = document.getElementById('messagesContainer');
+            const techniqueDiv = document.createElement('div');
+            techniqueDiv.className = 'message ai';
+            
+            techniqueDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="message-content">
+                    <div class="emotion-result">
+                        <div class="emotion-header">
+                            <i class="fas fa-spa"></i>
+                            ${tech.title}
+                        </div>
+                        <div class="emotion-content">
+                            ${stepsHtml}
+                            <div style="margin-top: 1rem; text-align: center;">
+                                <button onclick="completeTechnique('${technique}')" style="background: var(--emo-primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">
+                                    I've completed this exercise
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                </div>
+            `;
+            
+            container.appendChild(techniqueDiv);
+            container.scrollTop = container.scrollHeight;
+        }, 500);
+    }
+    
+    function completeTechnique(technique) {
+        addMessage(`Great work completing that technique! How are you feeling now? Notice any changes in your stress level or emotional state?`, 'ai', {
+            detected_emotion: 'Accomplished',
+            suggestions: ['Reflect on the experience', 'Note any positive changes', 'Consider regular practice']
+        });
+        
+        // Update wellness stats
+        updateWellnessStats();
+    }
+    
+    // Wellness tool functions
+    function runTool(tool) {
+        const tools = {
+            journal: () => {
+                addMessage('Let\'s do some therapeutic journaling. Try writing about: What\'s one thing that challenged you today, and how did you handle it? What are you grateful for right now?', 'ai');
+            },
+            meditation: () => {
+                startMeditationSession();
+            },
+            affirmations: () => {
+                const affirmations = [
+                    'I am worthy of love and respect',
+                    'I have the strength to handle whatever comes my way',
+                    'I choose to focus on what I can control',
+                    'I am growing and learning every day',
+                    'I deserve happiness and peace'
+                ];
+                const randomAffirmation = affirmations[Math.floor(Math.random() * affirmations.length)];
+                addMessage(`Here\'s a personal affirmation for you: "<span class="highlight-text">${randomAffirmation}</span>". Repeat this to yourself and really feel its truth. You might want to write it down or set it as a reminder.`, 'ai');
+            },
+            goals: () => {
+                addMessage('Let\'s work on your wellness goals. What\'s one small step you could take today toward better mental health? It could be as simple as taking a 5-minute walk or calling a friend.', 'ai');
+            },
+            habits: () => {
+                addMessage('Building positive habits is key to mental wellness. What\'s one healthy habit you\'d like to develop? I can help you create a plan to make it stick.', 'ai');
+            },
+            insights: () => {
+                addMessage(`Based on our conversations, I've noticed you tend to feel most balanced when you take time for self-reflection. Your emotional intelligence is growing - you're becoming more aware of your patterns and triggers. Keep up the great work!`, 'ai', {
+                    detected_emotion: 'Insightful',
+                    suggestions: ['Continue self-reflection', 'Track emotional patterns', 'Celebrate progress']
+                });
+            }
+        };
+        
+        if (tools[tool]) {
+            tools[tool]();
+        }
+    }
+    
+    // Control functions
+    function toggleTherapyMode() {
+        therapyMode = !therapyMode;
+        const btn = document.getElementById('therapyBtn');
+        
+        if (therapyMode) {
+            btn.style.background = 'var(--emo-primary)';
+            btn.style.borderColor = 'var(--emo-primary)';
+            addMessage('🧠 Therapy mode activated. I\'ll provide more structured therapeutic support and evidence-based techniques. Remember, while I can offer guidance, I\'m not a replacement for professional therapy if you need it.', 'ai');
+            document.querySelector('.status-indicator span').textContent = 'Providing therapeutic support';
+        } else {
+            btn.style.background = 'var(--emo-bg-glass)';
+            btn.style.borderColor = 'var(--emo-border)';
+            addMessage('💫 Switched to supportive companion mode. I\'m here to listen, support, and offer gentle guidance for your emotional well-being.', 'ai');
+            document.querySelector('.status-indicator span').textContent = 'Analyzing emotional patterns';
+        }
+    }
+    
+    function startMeditationSession() {
+        addMessage('🧘 Let\'s start a guided meditation. Find a comfortable position, close your eyes, and focus on your breathing. I\'ll guide you through a 5-minute session.', 'ai');
+        
+        const meditationSteps = [
+            'Take three deep breaths... in through your nose... out through your mouth...',
+            'Now let your breathing return to its natural rhythm...',
+            'Notice any tension in your body and gently let it go...',
+            'If thoughts arise, acknowledge them and let them pass like clouds...',
+            'Bring your attention back to your breath...',
+            'Feel yourself becoming more relaxed and centered...',
+            'Take a moment to appreciate this peaceful state...',
+            'When you\'re ready, slowly open your eyes.'
+        ];
+        
+        meditationSteps.forEach((step, index) => {
+            setTimeout(() => {
+                addMessage(step, 'ai');
+            }, (index + 1) * 30000); // 30 seconds between steps
+        });
+    }
+    
+    function activateVoiceInput() {
+        // Simulate voice input activation
+        addMessage('🎤 Voice input activated. Speak naturally about how you\'re feeling...', 'ai');
+        // In a real implementation, this would activate speech recognition
+    }
+    
+    function openEmotionWheel() {
+        // Simulate emotion wheel opening
+        addMessage('🎨 Here\'s your emotion wheel to help identify nuanced feelings. Sometimes we feel more than just happy or sad - emotions like "overwhelmed," "hopeful," or "nostalgic" can be more accurate. What resonates with you right now?', 'ai');
+    }
+    
+    function exportMoodLog() {
+        const moodData = {
+            date: new Date().toISOString().split('T')[0],
+            currentMood: currentMood,
+            sessionDuration: Math.floor((new Date() - sessionStartTime) / 60000),
+            messagesExchanged: messageCount,
+            techniquesUsed: [],
+            insights: 'Emotional awareness and coping skills development session'
+        };
+        
+        const blob = new Blob([JSON.stringify(moodData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `emoai_session_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        addMessage('📊 Your session data has been exported. This includes your mood entries, techniques practiced, and insights gained.', 'ai');
+    }
+    
+    function clearChat() {
+        if (confirm('Are you sure you want to clear this session? Your mood data will be preserved, but the conversation history will be lost.')) {
+            document.getElementById('messagesContainer').innerHTML = '';
+            messageCount = 0;
+            addMessage('Hello! I\'m here to support your emotional well-being. How are you feeling today?', 'ai');
+        }
+    }
+    
+    function toggleSetting(toggle) {
+        toggle.classList.toggle('active');
+    }
+    
+    function adjustTextareaHeight(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 150) + 'px';
+    }
+    
+    function updateWellnessStats() {
+        // Update various statistics in the sidebar
+        const sessionCount = document.querySelector('.setting-item:nth-child(1) strong');
+        const moodEntries = document.querySelector('.setting-item:nth-child(2) strong');
+        const techniques = document.querySelector('.setting-item:nth-child(3) strong');
+        
+        if (sessionCount) sessionCount.textContent = parseInt(sessionCount.textContent) + 1;
+        if (moodEntries) moodEntries.textContent = parseInt(moodEntries.textContent) + 1;
+    }
+    
+    // Event listeners
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    
+    document.getElementById('messageInput').addEventListener('input', function() {
+        adjustTextareaHeight(this);
+    });
+    
+    // Initialize default mood
+    document.querySelector('.mood-btn').classList.add('active');
+    
+    // Initialize on page load
+    window.addEventListener('load', function() {
+        document.getElementById('messageInput').focus();
+        addMessage('Hello! I\'m EmoAI, your emotional intelligence companion. I\'m here to help you understand your emotions, develop coping strategies, and support your mental wellness journey. How are you feeling today?', 'ai');
+    });
+</script>
 {% endblock %}

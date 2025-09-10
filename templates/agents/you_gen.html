@@ -2,15 +2,1294 @@
 
 {% block title %}YouGen - Content Generation Agent{% endblock %}
 
+{% block extra_css %}
+<style>
+    :root {
+        --you-primary: #06b6d4;
+        --you-secondary: #0891b2;
+        --you-accent: #0ea5e9;
+        --you-purple: #8b5cf6;
+        --you-pink: #ec4899;
+        --you-green: #10b981;
+        --you-yellow: #f59e0b;
+        --you-orange: #f97316;
+        
+        --you-bg-primary: #1a1b2e;
+        --you-bg-secondary: #16213e;
+        --you-bg-glass: rgba(6, 182, 212, 0.05);
+        --you-border: rgba(6, 182, 212, 0.2);
+        --you-text-primary: #e2e8f0;
+        --you-text-secondary: #94a3b8;
+        --you-shadow: 0 8px 32px rgba(6, 182, 212, 0.15);
+    }
+
+    .you-container {
+        min-height: 100vh;
+        background: radial-gradient(ellipse at top left, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    }
+
+    .chat-interface {
+        display: grid;
+        grid-template-columns: 300px 1fr 300px;
+        height: 100vh;
+        gap: 1px;
+        background: var(--you-border);
+    }
+
+    /* Content Panel */
+    .content-panel {
+        background: var(--you-bg-secondary);
+        border-right: 1px solid var(--you-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .content-types {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--you-border);
+    }
+
+    .type-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .type-btn {
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        border-radius: 12px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: var(--you-text-primary);
+    }
+
+    .type-btn:hover,
+    .type-btn.active {
+        background: var(--you-primary);
+        border-color: var(--you-primary);
+        transform: translateX(2px);
+    }
+
+    .type-btn i {
+        font-size: 1.5rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .type-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .type-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .type-desc {
+        font-size: 0.75rem;
+        color: var(--you-text-secondary);
+    }
+
+    .generation-options {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--you-border);
+    }
+
+    .option-group {
+        margin-bottom: 1rem;
+    }
+
+    .option-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--you-text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .option-select {
+        width: 100%;
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        color: var(--you-text-primary);
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+    }
+
+    .option-select:focus {
+        outline: none;
+        border-color: var(--you-primary);
+    }
+
+    .recent-projects {
+        padding: 1.5rem;
+    }
+
+    .project-item {
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .project-item:hover {
+        background: var(--you-primary);
+        border-color: var(--you-primary);
+    }
+
+    .project-title {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+        color: var(--you-text-primary);
+    }
+
+    .project-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--you-text-secondary);
+    }
+
+    /* Main Chat Area */
+    .chat-main {
+        background: var(--you-bg-primary);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .chat-header {
+        background: var(--you-bg-secondary);
+        padding: 1rem 2rem;
+        border-bottom: 1px solid var(--you-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .agent-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .agent-avatar {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--you-primary), var(--you-secondary));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: var(--you-shadow);
+    }
+
+    .agent-status {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--you-text-secondary);
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--you-green);
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .chat-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .control-btn {
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        color: var(--you-text-primary);
+        padding: 0.75rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+        background: var(--you-primary);
+        border-color: var(--you-primary);
+    }
+
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .message {
+        display: flex;
+        gap: 1rem;
+        max-width: 85%;
+        animation: slideUp 0.3s ease;
+    }
+
+    .message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--you-primary), var(--you-secondary));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .message.user .message-avatar {
+        background: linear-gradient(135deg, var(--you-purple), var(--you-pink));
+    }
+
+    .message-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .message-bubble {
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        padding: 1rem 1.25rem;
+        border-radius: 18px;
+        color: var(--you-text-primary);
+        line-height: 1.5;
+        backdrop-filter: blur(10px);
+    }
+
+    .message.user .message-bubble {
+        background: linear-gradient(135deg, var(--you-primary), var(--you-secondary));
+        border: none;
+        color: white;
+    }
+
+    .content-preview {
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .preview-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--you-primary);
+        margin-bottom: 0.75rem;
+    }
+
+    .preview-content {
+        color: var(--you-text-secondary);
+        line-height: 1.5;
+        font-size: 0.9rem;
+    }
+
+    .content-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+    .action-btn {
+        background: var(--you-primary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+        background: var(--you-secondary);
+        transform: translateY(-1px);
+    }
+
+    .message-time {
+        font-size: 0.75rem;
+        color: var(--you-text-secondary);
+        margin-top: 0.25rem;
+    }
+
+    .chat-input-area {
+        background: var(--you-bg-secondary);
+        border-top: 1px solid var(--you-border);
+        padding: 1.5rem 2rem;
+    }
+
+    .input-container {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .input-group {
+        flex: 1;
+        position: relative;
+    }
+
+    .chat-input {
+        width: 100%;
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        color: var(--you-text-primary);
+        padding: 1rem 1.25rem;
+        border-radius: 15px;
+        resize: none;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.5;
+        min-height: 50px;
+        max-height: 150px;
+        backdrop-filter: blur(10px);
+    }
+
+    .chat-input:focus {
+        outline: none;
+        border-color: var(--you-primary);
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+    }
+
+    .input-actions {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .input-btn {
+        background: none;
+        border: none;
+        color: var(--you-text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .input-btn:hover {
+        color: var(--you-primary);
+        background: var(--you-bg-glass);
+    }
+
+    .send-btn {
+        background: linear-gradient(135deg, var(--you-primary), var(--you-secondary));
+        border: none;
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .send-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--you-shadow);
+    }
+
+    /* Sidebar */
+    .chat-sidebar {
+        background: var(--you-bg-secondary);
+        border-left: 1px solid var(--you-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .sidebar-panel {
+        border-bottom: 1px solid var(--you-border);
+    }
+
+    .panel-header {
+        padding: 1rem 1.5rem;
+        background: var(--you-bg-glass);
+        color: var(--you-text-primary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid var(--you-border);
+    }
+
+    .panel-content {
+        padding: 1.5rem;
+    }
+
+    .quick-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .quick-btn {
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        color: var(--you-text-primary);
+        padding: 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .quick-btn:hover {
+        background: var(--you-primary);
+        border-color: var(--you-primary);
+        transform: translateY(-1px);
+    }
+
+    .quick-btn strong {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .quick-btn span {
+        font-size: 0.85rem;
+        color: var(--you-text-secondary);
+    }
+
+    .creative-tools {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .tool-btn {
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        color: var(--you-text-primary);
+        padding: 0.75rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .tool-btn:hover {
+        background: var(--you-primary);
+        border-color: var(--you-primary);
+        transform: translateY(-2px);
+    }
+
+    .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: var(--you-text-secondary);
+    }
+
+    .setting-toggle {
+        width: 40px;
+        height: 20px;
+        background: var(--you-bg-glass);
+        border: 1px solid var(--you-border);
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .setting-toggle::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: var(--you-text-secondary);
+        border-radius: 50%;
+        top: 1px;
+        left: 1px;
+        transition: all 0.3s ease;
+    }
+
+    .setting-toggle.active {
+        background: var(--you-primary);
+        border-color: var(--you-primary);
+    }
+
+    .setting-toggle.active::after {
+        background: white;
+        transform: translateX(20px);
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: var(--you-bg-glass);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--you-primary), var(--you-secondary));
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .highlight-text {
+        color: var(--you-primary);
+        font-weight: 600;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .chat-interface {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr;
+        }
+        
+        .content-panel,
+        .chat-sidebar {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .messages-container {
+            padding: 1rem;
+        }
+        
+        .message {
+            max-width: 95%;
+        }
+        
+        .chat-input-area {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="hero-section fade-in" style="padding: 8rem 0 6rem; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(8, 145, 178, 0.1)); border-radius: 30px; margin: 2rem; border: 1px solid rgba(6, 182, 212, 0.3); text-align: center;">
-        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #06b6d4, #0891b2); border-radius: 25px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white; margin: 0 auto 2rem; box-shadow: 0 20px 60px rgba(6, 182, 212, 0.4);">
-            <i class="fas fa-video"></i>
+<div class="you-container">
+    <div class="chat-interface">
+        <!-- Content Panel -->
+        <div class="content-panel">
+            <div class="content-types">
+                <div class="panel-header">
+                    <i class="fas fa-layers"></i>
+                    Content Types
+                </div>
+                
+                <div class="type-grid">
+                    <button class="type-btn active" onclick="selectContentType(this, 'video')">
+                        <i class="fas fa-video"></i>
+                        <div class="type-info">
+                            <div class="type-name">Video Content</div>
+                            <div class="type-desc">Scripts, storyboards, YouTube videos</div>
+                        </div>
+                    </button>
+                    
+                    <button class="type-btn" onclick="selectContentType(this, 'article')">
+                        <i class="fas fa-file-text"></i>
+                        <div class="type-info">
+                            <div class="type-name">Articles & Blogs</div>
+                            <div class="type-desc">Long-form written content</div>
+                        </div>
+                    </button>
+                    
+                    <button class="type-btn" onclick="selectContentType(this, 'social')">
+                        <i class="fas fa-hashtag"></i>
+                        <div class="type-info">
+                            <div class="type-name">Social Media</div>
+                            <div class="type-desc">Posts, captions, hashtags</div>
+                        </div>
+                    </button>
+                    
+                    <button class="type-btn" onclick="selectContentType(this, 'marketing')">
+                        <i class="fas fa-bullhorn"></i>
+                        <div class="type-info">
+                            <div class="type-name">Marketing Copy</div>
+                            <div class="type-desc">Ads, emails, landing pages</div>
+                        </div>
+                    </button>
+                    
+                    <button class="type-btn" onclick="selectContentType(this, 'creative')">
+                        <i class="fas fa-paint-brush"></i>
+                        <div class="type-info">
+                            <div class="type-name">Creative Writing</div>
+                            <div class="type-desc">Stories, poems, fiction</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="generation-options">
+                <div class="panel-header">
+                    <i class="fas fa-cog"></i>
+                    Generation Options
+                </div>
+                
+                <div class="option-group">
+                    <div class="option-label">Tone & Style</div>
+                    <select class="option-select" id="toneSelect">
+                        <option value="professional">Professional</option>
+                        <option value="casual">Casual & Friendly</option>
+                        <option value="humorous">Humorous</option>
+                        <option value="inspiring">Inspiring</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="educational">Educational</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <div class="option-label">Target Audience</div>
+                    <select class="option-select" id="audienceSelect">
+                        <option value="general">General Audience</option>
+                        <option value="young-adults">Young Adults (18-25)</option>
+                        <option value="professionals">Professionals</option>
+                        <option value="entrepreneurs">Entrepreneurs</option>
+                        <option value="students">Students</option>
+                        <option value="parents">Parents</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <div class="option-label">Content Length</div>
+                    <select class="option-select" id="lengthSelect">
+                        <option value="short">Short (< 500 words)</option>
+                        <option value="medium">Medium (500-1500 words)</option>
+                        <option value="long">Long (1500+ words)</option>
+                        <option value="custom">Custom Length</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="recent-projects">
+                <div class="panel-header">
+                    <i class="fas fa-history"></i>
+                    Recent Projects
+                </div>
+                
+                <div class="project-item" onclick="loadProject('tutorial')">
+                    <div class="project-title">YouTube Tutorial Script</div>
+                    <div class="project-meta">
+                        <span>Video Content</span>
+                        <span>2 hours ago</span>
+                    </div>
+                </div>
+                
+                <div class="project-item" onclick="loadProject('blog')">
+                    <div class="project-title">SEO Blog Article</div>
+                    <div class="project-meta">
+                        <span>Article</span>
+                        <span>1 day ago</span>
+                    </div>
+                </div>
+                
+                <div class="project-item" onclick="loadProject('campaign')">
+                    <div class="project-title">Social Media Campaign</div>
+                    <div class="project-meta">
+                        <span>Social Media</span>
+                        <span>3 days ago</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <h1 class="page-title">YouGen</h1>
-        <p class="page-subtitle">Advanced Content Creation System</p>
-        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Generate engaging videos, articles, and multimedia content with AI-powered creativity and optimization.</p>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="agent-info">
+                    <div class="agent-avatar">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="agent-status">
+                        <h2 style="margin: 0; font-size: 1.2rem;">YouGen</h2>
+                        <div class="status-indicator">
+                            <div class="status-dot"></div>
+                            <span>Ready to create amazing content</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-controls">
+                    <button class="control-btn" onclick="toggleCreativeMode()" title="Creative Mode" id="creativeBtn">
+                        <i class="fas fa-palette"></i>
+                    </button>
+                    <button class="control-btn" onclick="generateBulkContent()" title="Bulk Generation">
+                        <i class="fas fa-layer-group"></i>
+                    </button>
+                    <button class="control-btn" onclick="exportProject()" title="Export Project">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="control-btn" onclick="clearChat()" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="message ai">
+                    <div class="message-avatar">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Welcome to YouGen! I'm your advanced content creation assistant, ready to help you generate high-quality videos, articles, social media posts, marketing copy, and creative content. I can adapt to any tone, audience, and format. What type of content would you like to create today?
+                        </div>
+                        <div class="content-preview">
+                            <div class="preview-header">
+                                <i class="fas fa-lightbulb"></i>
+                                Content Suggestions
+                            </div>
+                            <div class="preview-content">
+                                Based on current trends, here are some high-performing content ideas:
+                                <br>📺 <span class="highlight-text">Tutorial videos</span> with step-by-step guidance
+                                <br>📝 <span class="highlight-text">How-to articles</span> solving specific problems  
+                                <br>📱 <span class="highlight-text">Social media series</span> for audience engagement
+                                <br>🚀 <span class="highlight-text">Marketing campaigns</span> with compelling CTAs
+                            </div>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chat-input-area">
+                <div class="input-container">
+                    <div class="input-group">
+                        <textarea 
+                            id="messageInput" 
+                            class="chat-input" 
+                            placeholder="Describe the content you want to create (topic, format, audience, goals)..."
+                            rows="1"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button class="input-btn" onclick="insertTemplate()" title="Insert Template">
+                                <i class="fas fa-file-import"></i>
+                            </button>
+                            <button class="input-btn" onclick="voiceInput()" title="Voice Input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="chat-sidebar">
+            <!-- Quick Actions -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-zap"></i>
+                    Quick Actions
+                </div>
+                <div class="panel-content">
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="quickAction('script')">
+                            <strong>🎬 Video Script</strong>
+                            <span>Create engaging video scripts</span>
+                        </button>
+                        <button class="quick-btn" onclick="quickAction('article')">
+                            <strong>📝 SEO Article</strong>
+                            <span>Optimized blog content</span>
+                        </button>
+                        <button class="quick-btn" onclick="quickAction('social')">
+                            <strong>📱 Social Posts</strong>
+                            <span>Multi-platform content</span>
+                        </button>
+                        <button class="quick-btn" onclick="quickAction('email')">
+                            <strong>✉️ Email Campaign</strong>
+                            <span>Persuasive email sequences</span>
+                        </button>
+                        <button class="quick-btn" onclick="quickAction('ads')">
+                            <strong>🎯 Ad Copy</strong>
+                            <span>Converting advertisements</span>
+                        </button>
+                        <button class="quick-btn" onclick="quickAction('story')">
+                            <strong>📚 Creative Story</strong>
+                            <span>Fiction and narratives</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Creative Tools -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-magic"></i>
+                    Creative Tools
+                </div>
+                <div class="panel-content">
+                    <div class="creative-tools">
+                        <button class="tool-btn" onclick="useTool('brainstorm')">
+                            <i class="fas fa-brain"></i>
+                            <span>Brainstorm</span>
+                        </button>
+                        <button class="tool-btn" onclick="useTool('outline')">
+                            <i class="fas fa-list-ul"></i>
+                            <span>Outline</span>
+                        </button>
+                        <button class="tool-btn" onclick="useTool('research')">
+                            <i class="fas fa-search"></i>
+                            <span>Research</span>
+                        </button>
+                        <button class="tool-btn" onclick="useTool('optimize')">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Optimize</span>
+                        </button>
+                        <button class="tool-btn" onclick="useTool('translate')">
+                            <i class="fas fa-language"></i>
+                            <span>Translate</span>
+                        </button>
+                        <button class="tool-btn" onclick="useTool('rewrite')">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Rewrite</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Stats -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-chart-bar"></i>
+                    Project Stats
+                </div>
+                <div class="panel-content">
+                    <div class="setting-item">
+                        <span>Content Created</span>
+                        <strong style="color: var(--you-primary);">147</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Words Generated</span>
+                        <strong style="color: var(--you-primary);">45.2K</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Projects Saved</span>
+                        <strong style="color: var(--you-primary);">23</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Success Rate</span>
+                        <strong style="color: var(--you-green);">94%</strong>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>This Month</span>
+                            <span style="color: var(--you-primary);">85%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </div>
+                <div class="panel-content">
+                    <div class="setting-item">
+                        <span>Creative Mode</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Auto-Save</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>SEO Optimization</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Plagiarism Check</span>
+                        <div class="setting-toggle" onclick="toggleSetting(this)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    // Initialize Socket.IO
+    const socket = io();
+    
+    // Global variables
+    let currentContentType = 'video';
+    let creativeMode = true;
+    let messageCount = 0;
+    
+    // Socket events
+    socket.emit('join_room', 'you_gen');
+    
+    socket.on('ai_response', function(data) {
+        addMessage(data.message, 'ai', data.content_preview);
+        updateProjectStats(data.stats);
+    });
+    
+    socket.on('content_generated', function(data) {
+        addGeneratedContent(data.content, data.type, data.metadata);
+    });
+    
+    // Content type functions
+    function selectContentType(button, type) {
+        document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        currentContentType = type;
+        
+        const typeNames = {
+            video: 'Video Content',
+            article: 'Articles & Blogs', 
+            social: 'Social Media',
+            marketing: 'Marketing Copy',
+            creative: 'Creative Writing'
+        };
+        
+        document.querySelector('.status-indicator span').textContent = `Ready to create ${typeNames[type]}`;
+        
+        addMessage(`🎯 Switched to ${typeNames[type]} creation mode! I'm now optimized for generating ${type === 'video' ? 'scripts, storyboards, and video content' : type === 'article' ? 'blog posts, articles, and long-form content' : type === 'social' ? 'social media posts, captions, and hashtags' : type === 'marketing' ? 'marketing copy, ads, and sales content' : 'creative stories, fiction, and narratives'}. What would you like to create?`, 'ai');
+    }
+    
+    // Message functions
+    function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        addMessage(message, 'user');
+        input.value = '';
+        
+        const options = {
+            tone: document.getElementById('toneSelect').value,
+            audience: document.getElementById('audienceSelect').value,
+            length: document.getElementById('lengthSelect').value
+        };
+        
+        socket.emit('user_message', {
+            message: message,
+            content_type: currentContentType,
+            creative_mode: creativeMode,
+            options: options,
+            agent: 'you_gen'
+        });
+        
+        adjustTextareaHeight(input);
+    }
+    
+    function addMessage(content, sender, contentPreview = null) {
+        const container = document.getElementById('messagesContainer');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        let previewHtml = '';
+        if (contentPreview) {
+            previewHtml = `
+                <div class="content-preview">
+                    <div class="preview-header">
+                        <i class="fas fa-file-alt"></i>
+                        Generated Content Preview
+                    </div>
+                    <div class="preview-content">
+                        ${contentPreview.preview || contentPreview}
+                    </div>
+                    <div class="content-actions">
+                        <button class="action-btn" onclick="refineContent('${contentPreview.id || 'latest'}')">Refine</button>
+                        <button class="action-btn" onclick="saveContent('${contentPreview.id || 'latest'}')">Save</button>
+                        <button class="action-btn" onclick="exportContent('${contentPreview.id || 'latest'}')">Export</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                <i class="fas fa-${sender === 'user' ? 'user' : 'video'}"></i>
+            </div>
+            <div class="message-content">
+                <div class="message-bubble">${content}</div>
+                ${previewHtml}
+                <div class="message-time">${timeStr}</div>
+            </div>
+        `;
+        
+        container.appendChild(messageDiv);
+        container.scrollTop = container.scrollHeight;
+        messageCount++;
+    }
+    
+    function addGeneratedContent(content, type, metadata) {
+        const contentData = {
+            id: 'content_' + Date.now(),
+            preview: content.substring(0, 200) + '...',
+            full: content,
+            type: type,
+            metadata: metadata
+        };
+        
+        addMessage(`✨ I've generated your ${type} content! Here's a preview:`, 'ai', contentData);
+    }
+    
+    // Quick action functions
+    function quickAction(action) {
+        const actions = {
+            script: "Create a compelling video script for a 5-minute tutorial on [topic]. Include hook, main content, and strong CTA.",
+            article: "Write a comprehensive SEO-optimized article about [topic] targeting [keyword]. Include H2/H3 structure, meta description, and internal linking opportunities.",
+            social: "Generate a 7-day social media content calendar with posts for Instagram, Twitter, and LinkedIn around [theme].",
+            email: "Create a 3-email welcome sequence for new subscribers including welcome, value delivery, and soft pitch emails.",
+            ads: "Write Facebook and Google ad copy variations (headlines, descriptions, CTAs) for [product/service] targeting [audience].",
+            story: "Write a short story (1000-1500 words) in the [genre] genre with compelling characters and plot twist."
+        };
+        
+        document.getElementById('messageInput').value = actions[action];
+        document.getElementById('messageInput').focus();
+    }
+    
+    // Tool functions
+    function useTool(tool) {
+        const tools = {
+            brainstorm: () => {
+                addMessage('💡 Brainstorming mode activated! Let\'s generate 10 creative ideas for your content. What\'s your main topic or theme?', 'ai');
+            },
+            outline: () => {
+                addMessage('📋 I\'ll create a detailed outline for your content. Please tell me: 1) Content type 2) Main topic 3) Target audience 4) Key points you want to cover', 'ai');
+            },
+            research: () => {
+                addMessage('🔍 Research assistant ready! I can help you find statistics, trends, competitor analysis, and supporting information for your content. What do you need to research?', 'ai');
+            },
+            optimize: () => {
+                addMessage('🚀 Content optimization tools ready! I can improve SEO, readability, engagement, conversion rates, and performance. Share your content for analysis.', 'ai');
+            },
+            translate: () => {
+                addMessage('🌍 Translation service active! I can translate your content into multiple languages while maintaining tone, style, and cultural nuances. Which languages do you need?', 'ai');
+            },
+            rewrite: () => {
+                addMessage('✏️ Content rewriter ready! I can change tone, style, format, length, or target audience while keeping the core message. Share your content for rewriting.', 'ai');
+            }
+        };
+        
+        if (tools[tool]) {
+            tools[tool]();
+        }
+    }
+    
+    // Project functions
+    function loadProject(project) {
+        const projects = {
+            tutorial: {
+                type: 'video',
+                content: 'How to Create Viral Content: A Step-by-Step Tutorial Script',
+                description: 'Complete video script with hooks, transitions, and CTAs'
+            },
+            blog: {
+                type: 'article', 
+                content: '10 SEO Strategies That Actually Work in 2024',
+                description: 'Comprehensive guide with actionable tips and examples'
+            },
+            campaign: {
+                type: 'social',
+                content: 'Launch Week Social Media Campaign',
+                description: 'Multi-platform content for product launch'
+            }
+        };
+        
+        const proj = projects[project];
+        if (proj) {
+            addMessage(`📂 Loaded project: "${proj.content}" - ${proj.description}. Would you like to continue editing this ${proj.type} content or create variations?`, 'ai');
+        }
+    }
+    
+    // Control functions
+    function toggleCreativeMode() {
+        creativeMode = !creativeMode;
+        const btn = document.getElementById('creativeBtn');
+        
+        if (creativeMode) {
+            btn.style.background = 'var(--you-primary)';
+            btn.style.borderColor = 'var(--you-primary)';
+            addMessage('🎨 Creative mode activated! I\'ll be more experimental, artistic, and innovative in content generation. Expect unique angles and creative storytelling!', 'ai');
+            document.querySelector('.status-indicator span').textContent = 'Creative mode - ready to innovate';
+        } else {
+            btn.style.background = 'var(--you-bg-glass)';
+            btn.style.borderColor = 'var(--you-border)';
+            addMessage('📊 Switched to structured mode. I\'ll focus on proven formulas, data-driven approaches, and standard best practices for reliable results.', 'ai');
+            document.querySelector('.status-indicator span').textContent = 'Ready to create amazing content';
+        }
+    }
+    
+    function generateBulkContent() {
+        addMessage('🔥 Bulk generation mode! I can create multiple pieces of content at once. Examples:\n\n• 10 blog post titles + outlines\n• 30-day social media calendar\n• Email sequence series\n• Video scripts batch\n\nWhat type of bulk content do you need?', 'ai');
+    }
+    
+    function insertTemplate() {
+        const templates = [
+            'Blog post template: [Hook] + [Problem] + [Solution] + [Proof] + [CTA]',
+            'Video script template: [Intro Hook] + [Value Preview] + [Main Content] + [Recap] + [Subscribe CTA]',
+            'Social post template: [Attention Grabber] + [Value/Story] + [Engagement Question]',
+            'Email template: [Personal Subject] + [Quick Value] + [Main Content] + [Clear CTA]',
+            'Sales page template: [Headline] + [Problem Agitation] + [Solution] + [Benefits] + [Social Proof] + [CTA]'
+        ];
+        
+        const template = templates[Math.floor(Math.random() * templates.length)];
+        document.getElementById('messageInput').value = `Use this template: ${template}`;
+        document.getElementById('messageInput').focus();
+    }
+    
+    function voiceInput() {
+        addMessage('🎤 Voice input activated! Speak naturally and I\'ll help you create content from your ideas. (Note: In a real implementation, this would activate speech recognition)', 'ai');
+    }
+    
+    function exportProject() {
+        const projectData = {
+            date: new Date().toISOString(),
+            contentType: currentContentType,
+            creativeMode: creativeMode,
+            options: {
+                tone: document.getElementById('toneSelect').value,
+                audience: document.getElementById('audienceSelect').value,
+                length: document.getElementById('lengthSelect').value
+            },
+            generatedContent: messageCount,
+            session: 'YouGen content creation session'
+        };
+        
+        const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `yougen_project_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        addMessage('📁 Project exported successfully! Includes all generated content, settings, and session data.', 'ai');
+    }
+    
+    function clearChat() {
+        if (confirm('Are you sure you want to clear this content creation session?')) {
+            document.getElementById('messagesContainer').innerHTML = '';
+            messageCount = 0;
+            addMessage('Welcome back to YouGen! Ready to create amazing content? What would you like to generate today?', 'ai');
+        }
+    }
+    
+    // Content action functions
+    function refineContent(contentId) {
+        addMessage('✨ I\'ll refine this content to improve clarity, engagement, and effectiveness. What specific aspects would you like me to enhance?', 'ai');
+    }
+    
+    function saveContent(contentId) {
+        addMessage('💾 Content saved to your project library! You can access it anytime from the Recent Projects panel.', 'ai');
+    }
+    
+    function exportContent(contentId) {
+        addMessage('📤 Content exported in multiple formats (TXT, DOC, PDF). Ready for use across all platforms!', 'ai');
+    }
+    
+    function toggleSetting(toggle) {
+        toggle.classList.toggle('active');
+    }
+    
+    function adjustTextareaHeight(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 150) + 'px';
+    }
+    
+    function updateProjectStats(stats) {
+        if (stats) {
+            console.log('Updating project stats:', stats);
+        }
+    }
+    
+    // Event listeners
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    
+    document.getElementById('messageInput').addEventListener('input', function() {
+        adjustTextareaHeight(this);
+    });
+    
+    // Initialize on page load
+    window.addEventListener('load', function() {
+        document.getElementById('messageInput').focus();
+    });
+</script>
 {% endblock %}

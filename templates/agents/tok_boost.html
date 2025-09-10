@@ -2,15 +2,1245 @@
 
 {% block title %}TokBoost - Social Media Growth Agent{% endblock %}
 
+{% block extra_css %}
+<style>
+    :root {
+        --tok-primary: #ef4444;
+        --tok-secondary: #dc2626;
+        --tok-accent: #f97316;
+        --tok-pink: #ec4899;
+        --tok-purple: #8b5cf6;
+        --tok-blue: #3b82f6;
+        --tok-green: #10b981;
+        --tok-yellow: #eab308;
+        
+        --tok-bg-primary: #1a1b2e;
+        --tok-bg-secondary: #16213e;
+        --tok-bg-glass: rgba(239, 68, 68, 0.05);
+        --tok-border: rgba(239, 68, 68, 0.2);
+        --tok-text-primary: #e2e8f0;
+        --tok-text-secondary: #94a3b8;
+        --tok-shadow: 0 8px 32px rgba(239, 68, 68, 0.15);
+    }
+
+    .tok-container {
+        min-height: 100vh;
+        background: radial-gradient(ellipse at top right, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom left, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+    }
+
+    .chat-interface {
+        display: grid;
+        grid-template-columns: 280px 1fr 300px;
+        height: 100vh;
+        gap: 1px;
+        background: var(--tok-border);
+    }
+
+    /* Analytics Panel */
+    .analytics-panel {
+        background: var(--tok-bg-secondary);
+        border-right: 1px solid var(--tok-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .platform-selector {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--tok-border);
+    }
+
+    .platform-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .platform-btn {
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        border-radius: 12px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--tok-text-primary);
+    }
+
+    .platform-btn:hover,
+    .platform-btn.active {
+        background: var(--tok-primary);
+        border-color: var(--tok-primary);
+        transform: translateY(-1px);
+    }
+
+    .platform-btn i {
+        font-size: 1.5rem;
+    }
+
+    .growth-metrics {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--tok-border);
+    }
+
+    .metric-card {
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .metric-value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin-bottom: 0.25rem;
+    }
+
+    .metric-label {
+        font-size: 0.8rem;
+        color: var(--tok-text-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    .metric-change {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .metric-change.positive {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--tok-green);
+    }
+
+    .metric-change.negative {
+        background: rgba(239, 68, 68, 0.2);
+        color: var(--tok-primary);
+    }
+
+    .trending-content {
+        padding: 1.5rem;
+    }
+
+    .trend-item {
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .trend-item:hover {
+        background: var(--tok-primary);
+        border-color: var(--tok-primary);
+    }
+
+    .trend-title {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+        color: var(--tok-text-primary);
+    }
+
+    .trend-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: var(--tok-text-secondary);
+    }
+
+    /* Main Chat Area */
+    .chat-main {
+        background: var(--tok-bg-primary);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .chat-header {
+        background: var(--tok-bg-secondary);
+        padding: 1rem 2rem;
+        border-bottom: 1px solid var(--tok-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .agent-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .agent-avatar {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--tok-primary), var(--tok-secondary));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        box-shadow: var(--tok-shadow);
+    }
+
+    .agent-status {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--tok-text-secondary);
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--tok-green);
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    .chat-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .control-btn {
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        color: var(--tok-text-primary);
+        padding: 0.75rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+        background: var(--tok-primary);
+        border-color: var(--tok-primary);
+    }
+
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .message {
+        display: flex;
+        gap: 1rem;
+        max-width: 85%;
+        animation: slideUp 0.3s ease;
+    }
+
+    .message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--tok-primary), var(--tok-secondary));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .message.user .message-avatar {
+        background: linear-gradient(135deg, var(--tok-pink), var(--tok-purple));
+    }
+
+    .message-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .message-bubble {
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        padding: 1rem 1.25rem;
+        border-radius: 18px;
+        color: var(--tok-text-primary);
+        line-height: 1.5;
+        backdrop-filter: blur(10px);
+    }
+
+    .message.user .message-bubble {
+        background: linear-gradient(135deg, var(--tok-primary), var(--tok-secondary));
+        border: none;
+        color: white;
+    }
+
+    .content-suggestion {
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .suggestion-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--tok-primary);
+        margin-bottom: 0.75rem;
+    }
+
+    .suggestion-content {
+        color: var(--tok-text-secondary);
+        line-height: 1.5;
+    }
+
+    .message-time {
+        font-size: 0.75rem;
+        color: var(--tok-text-secondary);
+        margin-top: 0.25rem;
+    }
+
+    .chat-input-area {
+        background: var(--tok-bg-secondary);
+        border-top: 1px solid var(--tok-border);
+        padding: 1.5rem 2rem;
+    }
+
+    .input-container {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .input-group {
+        flex: 1;
+        position: relative;
+    }
+
+    .chat-input {
+        width: 100%;
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        color: var(--tok-text-primary);
+        padding: 1rem 1.25rem;
+        border-radius: 15px;
+        resize: none;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.5;
+        min-height: 50px;
+        max-height: 150px;
+        backdrop-filter: blur(10px);
+    }
+
+    .chat-input:focus {
+        outline: none;
+        border-color: var(--tok-primary);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .input-actions {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .input-btn {
+        background: none;
+        border: none;
+        color: var(--tok-text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .input-btn:hover {
+        color: var(--tok-primary);
+        background: var(--tok-bg-glass);
+    }
+
+    .send-btn {
+        background: linear-gradient(135deg, var(--tok-primary), var(--tok-secondary));
+        border: none;
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .send-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--tok-shadow);
+    }
+
+    /* Sidebar */
+    .chat-sidebar {
+        background: var(--tok-bg-secondary);
+        border-left: 1px solid var(--tok-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    .sidebar-panel {
+        border-bottom: 1px solid var(--tok-border);
+    }
+
+    .panel-header {
+        padding: 1rem 1.5rem;
+        background: var(--tok-bg-glass);
+        color: var(--tok-text-primary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid var(--tok-border);
+    }
+
+    .panel-content {
+        padding: 1.5rem;
+    }
+
+    .content-templates {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .template-btn {
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        color: var(--tok-text-primary);
+        padding: 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .template-btn:hover {
+        background: var(--tok-primary);
+        border-color: var(--tok-primary);
+        transform: translateY(-1px);
+    }
+
+    .template-btn strong {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .template-btn span {
+        font-size: 0.85rem;
+        color: var(--tok-text-secondary);
+    }
+
+    .growth-tools {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .tool-btn {
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        color: var(--tok-text-primary);
+        padding: 0.75rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .tool-btn:hover {
+        background: var(--tok-primary);
+        border-color: var(--tok-primary);
+        transform: translateY(-2px);
+    }
+
+    .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: var(--tok-text-secondary);
+    }
+
+    .setting-toggle {
+        width: 40px;
+        height: 20px;
+        background: var(--tok-bg-glass);
+        border: 1px solid var(--tok-border);
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .setting-toggle::after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: var(--tok-text-secondary);
+        border-radius: 50%;
+        top: 1px;
+        left: 1px;
+        transition: all 0.3s ease;
+    }
+
+    .setting-toggle.active {
+        background: var(--tok-primary);
+        border-color: var(--tok-primary);
+    }
+
+    .setting-toggle.active::after {
+        background: white;
+        transform: translateX(20px);
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: var(--tok-bg-glass);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--tok-primary), var(--tok-secondary));
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .highlight-text {
+        color: var(--tok-primary);
+        font-weight: 600;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .chat-interface {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr;
+        }
+        
+        .analytics-panel,
+        .chat-sidebar {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .messages-container {
+            padding: 1rem;
+        }
+        
+        .message {
+            max-width: 95%;
+        }
+        
+        .chat-input-area {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="hero-section fade-in" style="padding: 8rem 0 6rem; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1)); border-radius: 30px; margin: 2rem; border: 1px solid rgba(239, 68, 68, 0.3); text-align: center;">
-        <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #ef4444, #dc2626); border-radius: 25px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white; margin: 0 auto 2rem; box-shadow: 0 20px 60px rgba(239, 68, 68, 0.4);">
-            <i class="fas fa-rocket"></i>
+<div class="tok-container">
+    <div class="chat-interface">
+        <!-- Analytics Panel -->
+        <div class="analytics-panel">
+            <div class="platform-selector">
+                <div class="panel-header">
+                    <i class="fas fa-share-alt"></i>
+                    Platforms
+                </div>
+                
+                <div class="platform-grid">
+                    <button class="platform-btn active" onclick="selectPlatform(this, 'tiktok')">
+                        <i class="fab fa-tiktok"></i>
+                        <span>TikTok</span>
+                    </button>
+                    <button class="platform-btn" onclick="selectPlatform(this, 'instagram')">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </button>
+                    <button class="platform-btn" onclick="selectPlatform(this, 'youtube')">
+                        <i class="fab fa-youtube"></i>
+                        <span>YouTube</span>
+                    </button>
+                    <button class="platform-btn" onclick="selectPlatform(this, 'twitter')">
+                        <i class="fab fa-twitter"></i>
+                        <span>Twitter</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="growth-metrics">
+                <div class="panel-header">
+                    <i class="fas fa-chart-line"></i>
+                    Growth Metrics
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value" style="color: var(--tok-primary);">142.5K</div>
+                    <div class="metric-label">Followers</div>
+                    <div class="metric-change positive">+12.3%</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value" style="color: var(--tok-pink);">2.8M</div>
+                    <div class="metric-label">Monthly Views</div>
+                    <div class="metric-change positive">+24.7%</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value" style="color: var(--tok-yellow);">8.4%</div>
+                    <div class="metric-label">Engagement Rate</div>
+                    <div class="metric-change negative">-2.1%</div>
+                </div>
+            </div>
+
+            <div class="trending-content">
+                <div class="panel-header">
+                    <i class="fas fa-fire"></i>
+                    Trending Now
+                </div>
+                
+                <div class="trend-item" onclick="useTrend('dance')">
+                    <div class="trend-title">#DanceChallenge2024</div>
+                    <div class="trend-stats">
+                        <span>12.5M posts</span>
+                        <span>Rising 🔥</span>
+                    </div>
+                </div>
+                
+                <div class="trend-item" onclick="useTrend('cooking')">
+                    <div class="trend-title">#QuickRecipes</div>
+                    <div class="trend-stats">
+                        <span>8.2M posts</span>
+                        <span>Steady 📈</span>
+                    </div>
+                </div>
+                
+                <div class="trend-item" onclick="useTrend('motivation')">
+                    <div class="trend-title">#MorningMotivation</div>
+                    <div class="trend-stats">
+                        <span>5.7M posts</span>
+                        <span>Hot 🚀</span>
+                    </div>
+                </div>
+                
+                <div class="trend-item" onclick="useTrend('fashion')">
+                    <div class="trend-title">#OutfitTransition</div>
+                    <div class="trend-stats">
+                        <span>15.1M posts</span>
+                        <span>Peak 🎯</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <h1 class="page-title">TokBoost</h1>
-        <p class="page-subtitle">Supercharge Your Social Media Presence</p>
-        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">AI-powered content optimization, trend analysis, and engagement strategies for explosive social media growth.</p>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="agent-info">
+                    <div class="agent-avatar">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="agent-status">
+                        <h2 style="margin: 0; font-size: 1.2rem;">TokBoost</h2>
+                        <div class="status-indicator">
+                            <div class="status-dot"></div>
+                            <span>Analyzing viral trends</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-controls">
+                    <button class="control-btn" onclick="toggleViralMode()" title="Viral Analysis Mode" id="viralBtn">
+                        <i class="fas fa-fire"></i>
+                    </button>
+                    <button class="control-btn" onclick="generateContent()" title="Generate Content Ideas">
+                        <i class="fas fa-magic"></i>
+                    </button>
+                    <button class="control-btn" onclick="exportStrategy()" title="Export Growth Strategy">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="control-btn" onclick="clearChat()" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="message ai">
+                    <div class="message-avatar">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            Ready to explode your social media presence? I'm TokBoost, your AI growth strategist specializing in viral content creation, trend analysis, and engagement optimization. I've analyzed current trends and your metrics look promising! Let's create content that gets millions of views. What's your niche or what type of content do you want to create?
+                        </div>
+                        <div class="content-suggestion">
+                            <div class="suggestion-header">
+                                <i class="fas fa-chart-bar"></i>
+                                Current Trend Analysis
+                            </div>
+                            <div class="suggestion-content">
+                                🔥 <span class="highlight-text">Dance challenges</span> are peaking (15M+ posts)<br>
+                                📈 <span class="highlight-text">Quick tutorials</span> have 89% engagement rate<br>
+                                🎯 <span class="highlight-text">Behind-the-scenes</span> content drives authentic connection<br>
+                                ⚡ <span class="highlight-text">Transition videos</span> are perfect for your audience
+                            </div>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chat-input-area">
+                <div class="input-container">
+                    <div class="input-group">
+                        <textarea 
+                            id="messageInput" 
+                            class="chat-input" 
+                            placeholder="Tell me your niche, goals, or ask for viral content ideas..."
+                            rows="1"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button class="input-btn" onclick="analyzeTrends()" title="Analyze Current Trends">
+                                <i class="fas fa-chart-line"></i>
+                            </button>
+                            <button class="input-btn" onclick="uploadContent()" title="Upload Content for Analysis">
+                                <i class="fas fa-upload"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="chat-sidebar">
+            <!-- Content Templates -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-video"></i>
+                    Viral Templates
+                </div>
+                <div class="panel-content">
+                    <div class="content-templates">
+                        <button class="template-btn" onclick="useTemplate('hooks')">
+                            <strong>🎣 Viral Hooks</strong>
+                            <span>"POV:", "Tell me why...", "Things nobody talks about"</span>
+                        </button>
+                        <button class="template-btn" onclick="useTemplate('storytelling')">
+                            <strong>📚 Story Structure</strong>
+                            <span>Hook → Problem → Solution → CTA</span>
+                        </button>
+                        <button class="template-btn" onclick="useTemplate('tutorials')">
+                            <strong>🎯 Quick Tutorials</strong>
+                            <span>Step-by-step valuable content</span>
+                        </button>
+                        <button class="template-btn" onclick="useTemplate('trending')">
+                            <strong>🔥 Trend Adaptation</strong>
+                            <span>Use hot audio with your niche</span>
+                        </button>
+                        <button class="template-btn" onclick="useTemplate('relatable')">
+                            <strong>💭 Relatable Content</strong>
+                            <span>"When you...", "That feeling when..."</span>
+                        </button>
+                        <button class="template-btn" onclick="useTemplate('transformation')">
+                            <strong>✨ Before/After</strong>
+                            <span>Show dramatic changes or results</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Growth Tools -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-tools"></i>
+                    Growth Tools
+                </div>
+                <div class="panel-content">
+                    <div class="growth-tools">
+                        <button class="tool-btn" onclick="runTool('hashtags')">
+                            <i class="fas fa-hashtag"></i>
+                            <span>Hashtags</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('captions')">
+                            <i class="fas fa-edit"></i>
+                            <span>Captions</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('timing')">
+                            <i class="fas fa-clock"></i>
+                            <span>Best Times</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('audio')">
+                            <i class="fas fa-music"></i>
+                            <span>Trending Audio</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('engagement')">
+                            <i class="fas fa-heart"></i>
+                            <span>Engagement</span>
+                        </button>
+                        <button class="tool-btn" onclick="runTool('analytics')">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Analytics</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Tracking -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-trophy"></i>
+                    Performance
+                </div>
+                <div class="panel-content">
+                    <div class="setting-item">
+                        <span>This Week</span>
+                        <strong style="color: var(--tok-green);">+15.2%</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Viral Videos</span>
+                        <strong style="color: var(--tok-primary);">3</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Avg. Views</span>
+                        <strong style="color: var(--tok-pink);">87.5K</strong>
+                    </div>
+                    <div class="setting-item">
+                        <span>Growth Rate</span>
+                        <strong style="color: var(--tok-yellow);">2.3%</strong>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Monthly Goal</span>
+                            <span style="color: var(--tok-primary);">78%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 78%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="sidebar-panel">
+                <div class="panel-header">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </div>
+                <div class="panel-content">
+                    <div class="setting-item">
+                        <span>Viral Mode</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Trend Alerts</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Auto-Hashtags</span>
+                        <div class="setting-toggle" onclick="toggleSetting(this)"></div>
+                    </div>
+                    <div class="setting-item">
+                        <span>Growth Tracking</span>
+                        <div class="setting-toggle active" onclick="toggleSetting(this)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    // Initialize Socket.IO
+    const socket = io();
+    
+    // Global variables
+    let currentPlatform = 'tiktok';
+    let viralMode = true;
+    let messageCount = 0;
+    
+    // Socket events
+    socket.emit('join_room', 'tok_boost');
+    
+    socket.on('ai_response', function(data) {
+        addMessage(data.message, 'ai', data.content_strategy);
+        updateGrowthMetrics(data.metrics);
+    });
+    
+    socket.on('content_generated', function(data) {
+        addContentSuggestions(data.ideas, data.hooks, data.hashtags);
+    });
+    
+    // Platform functions
+    function selectPlatform(button, platform) {
+        document.querySelectorAll('.platform-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        currentPlatform = platform;
+        
+        document.querySelector('.status-indicator span').textContent = `Optimizing for ${platform.charAt(0).toUpperCase() + platform.slice(1)}`;
+        
+        addMessage(`🎯 Switched to ${platform.charAt(0).toUpperCase() + platform.slice(1)} optimization! I'll now tailor all content suggestions, hashtag strategies, and growth tactics specifically for this platform. What type of content do you want to create?`, 'ai', {
+            strategy: `Platform-specific optimization for ${platform}`,
+            tactics: getPlatformTactics(platform),
+            timing: getPlatformTiming(platform)
+        });
+    }
+    
+    function getPlatformTactics(platform) {
+        const tactics = {
+            tiktok: 'Short-form vertical videos, trending audio, hashtag challenges',
+            instagram: 'High-quality visuals, Stories, Reels, IGTV content',
+            youtube: 'Long-form content, thumbnails, SEO optimization',
+            twitter: 'Real-time engagement, threads, trending topics'
+        };
+        return tactics[platform] || 'Platform-specific content optimization';
+    }
+    
+    function getPlatformTiming(platform) {
+        const timing = {
+            tiktok: '6-10 PM, 7-9 AM peak times',
+            instagram: '11 AM-1 PM, 7-9 PM optimal',
+            youtube: '2-4 PM weekdays, 9-11 AM weekends',
+            twitter: '9 AM, 1-3 PM, 5 PM highest engagement'
+        };
+        return timing[platform] || 'Optimal posting schedule analysis';
+    }
+    
+    // Message functions
+    function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        addMessage(message, 'user');
+        input.value = '';
+        
+        socket.emit('user_message', {
+            message: message,
+            platform: currentPlatform,
+            viral_mode: viralMode,
+            agent: 'tok_boost'
+        });
+        
+        adjustTextareaHeight(input);
+    }
+    
+    function addMessage(content, sender, contentData = null) {
+        const container = document.getElementById('messagesContainer');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        let strategyHtml = '';
+        if (contentData) {
+            strategyHtml = `
+                <div class="content-suggestion">
+                    <div class="suggestion-header">
+                        <i class="fas fa-lightbulb"></i>
+                        Content Strategy
+                    </div>
+                    <div class="suggestion-content">
+                        📊 <strong>Strategy:</strong> ${contentData.strategy}<br>
+                        🎯 <strong>Tactics:</strong> ${contentData.tactics}<br>
+                        ⏰ <strong>Timing:</strong> ${contentData.timing}
+                    </div>
+                </div>
+            `;
+        }
+        
+        messageDiv.innerHTML = `
+            <div class="message-avatar">
+                <i class="fas fa-${sender === 'user' ? 'user' : 'rocket'}"></i>
+            </div>
+            <div class="message-content">
+                <div class="message-bubble">${content}</div>
+                ${strategyHtml}
+                <div class="message-time">${timeStr}</div>
+            </div>
+        `;
+        
+        container.appendChild(messageDiv);
+        container.scrollTop = container.scrollHeight;
+        messageCount++;
+    }
+    
+    // Template and trend functions
+    function useTemplate(template) {
+        const templates = {
+            hooks: "Create 5 viral hooks for my niche using these formulas: 'POV:', 'Tell me why...', 'Things nobody talks about', 'Wait until you see...', 'This will change your mind about...'",
+            storytelling: "Help me structure my content using the viral storytelling formula: Hook (first 3 seconds) → Problem (build tension) → Solution (provide value) → Call to Action (engage audience)",
+            tutorials: "Generate quick tutorial ideas that can be explained in 15-30 seconds with maximum value and shareability",
+            trending: "Show me how to adapt current trending audio and hashtags to my specific niche without looking forced or inauthentic",
+            relatable: "Create relatable content ideas using 'When you...', 'That feeling when...', 'Nobody talks about...' formats that my audience will connect with",
+            transformation: "Help me plan before/after or transformation content that showcases dramatic results or changes in my field"
+        };
+        
+        document.getElementById('messageInput').value = templates[template];
+        document.getElementById('messageInput').focus();
+    }
+    
+    function useTrend(trend) {
+        const trends = {
+            dance: "How can I create a dance challenge or participate in #DanceChallenge2024 while incorporating my niche? Give me creative variations that will stand out.",
+            cooking: "Generate #QuickRecipes content ideas that are visually appealing, easy to follow, and likely to go viral. Include unique twists or presentation styles.",
+            motivation: "Create motivational content for #MorningMotivation that's authentic, actionable, and resonates with my target audience. Include powerful quotes and practical tips.",
+            fashion: "#OutfitTransition trends - help me create outfit transformation videos that showcase style evolution, seasonal changes, or event-specific looks."
+        };
+        
+        addMessage(trends[trend], 'user');
+        sendMessage();
+    }
+    
+    // Tool functions
+    function runTool(tool) {
+        const tools = {
+            hashtags: () => {
+                addMessage('🏷️ Generating optimal hashtag strategy: Mix 3-5 trending hashtags (high competition), 5-8 niche hashtags (medium competition), and 2-3 branded hashtags (low competition). Current recommendations: #fyp #viral #trending + your niche-specific tags', 'ai', {
+                    strategy: 'Balanced hashtag mix for maximum reach',
+                    tactics: '30% trending, 60% niche, 10% branded hashtags',
+                    timing: 'Update hashtag sets every 2-3 days based on performance'
+                });
+            },
+            captions: () => {
+                addMessage('✍️ Caption optimization tips: Start with a hook question, use line breaks for readability, include a clear CTA, add relevant emojis, keep it conversational. Length: 100-150 characters for TikTok, 125-150 for Instagram Reels.', 'ai', {
+                    strategy: 'Engagement-focused caption structure',
+                    tactics: 'Hook + Value + CTA + Hashtags format',
+                    timing: 'Test different caption styles weekly'
+                });
+            },
+            timing: () => {
+                const timingData = getPlatformTiming(currentPlatform);
+                addMessage(`⏰ Optimal posting times for ${currentPlatform}: ${timingData}. Also consider your audience timezone, post consistently, and analyze your personal analytics for the best performing times.`, 'ai', {
+                    strategy: `${currentPlatform} timing optimization`,
+                    tactics: 'Consistent posting schedule with peak time focus',
+                    timing: 'Track performance and adjust based on analytics'
+                });
+            },
+            audio: () => {
+                addMessage('🎵 Trending audio strategy: Use audio that\'s 1-3 days old for maximum reach, check trending sounds daily, save audio from viral videos in your niche, create original audio for brand building. Current hot genres: upbeat pop, nostalgic hits, comedy sounds.', 'ai', {
+                    strategy: 'Strategic audio selection for virality',
+                    tactics: 'Mix trending and original audio content',
+                    timing: 'Check trending audio 2x daily for opportunities'
+                });
+            },
+            engagement: () => {
+                addMessage('💬 Boost engagement: Respond to comments within first hour, ask questions in captions, create content that encourages saves/shares, use trending audio, post at peak times, collaborate with others in your niche.', 'ai', {
+                    strategy: 'Multi-faceted engagement optimization',
+                    tactics: 'Quick response + interactive content + collaborations',
+                    timing: 'Active community management in first 2 hours after posting'
+                });
+            },
+            analytics: () => {
+                addMessage('📊 Track these KPIs: View completion rate (aim for 80%+), save rate (5%+), share rate (3%+), comment rate (2%+), follower conversion rate. Use native analytics plus third-party tools for deeper insights.', 'ai', {
+                    strategy: 'Comprehensive performance tracking',
+                    tactics: 'Focus on engagement metrics over vanity metrics',
+                    timing: 'Weekly analytics review and strategy adjustment'
+                });
+            }
+        };
+        
+        if (tools[tool]) {
+            tools[tool]();
+        }
+    }
+    
+    // Control functions
+    function toggleViralMode() {
+        viralMode = !viralMode;
+        const btn = document.getElementById('viralBtn');
+        
+        if (viralMode) {
+            btn.style.background = 'var(--tok-primary)';
+            btn.style.borderColor = 'var(--tok-primary)';
+            addMessage('🔥 Viral mode activated! I\'ll focus on explosive growth strategies, trend-jacking, and maximum reach tactics. All suggestions will be optimized for viral potential!', 'ai');
+            document.querySelector('.status-indicator span').textContent = 'Viral optimization active';
+        } else {
+            btn.style.background = 'var(--tok-bg-glass)';
+            btn.style.borderColor = 'var(--tok-border)';
+            addMessage('📈 Switched to steady growth mode. I\'ll focus on sustainable, long-term growth strategies and consistent audience building.', 'ai');
+            document.querySelector('.status-indicator span').textContent = 'Analyzing growth trends';
+        }
+    }
+    
+    function generateContent() {
+        addMessage('🎬 Generating viral content ideas based on current trends and your platform...', 'ai');
+        
+        setTimeout(() => {
+            const contentIdeas = [
+                '🎯 "Day in my life but make it aesthetic" - trending format with your unique spin',
+                '🔄 Transformation Tuesday - show before/after of your work/skill/space',
+                '💡 "Things I wish I knew before..." - educational content in your niche',
+                '🎭 POV: You\'re explaining [your expertise] to a 5-year-old',
+                '⚡ Quick tips series - 3 tips in 15 seconds format'
+            ];
+            
+            addMessage(`Here are 5 viral content ideas for ${currentPlatform}:\n\n${contentIdeas.join('\n\n')}`, 'ai', {
+                strategy: 'Trend-based content generation',
+                tactics: 'Mix of educational and entertainment content',
+                timing: 'Execute 1-2 ideas daily for consistent growth'
+            });
+        }, 2000);
+    }
+    
+    function analyzeTrends() {
+        addMessage('📊 Analyzing current trends across all platforms...', 'ai', {
+            strategy: 'Cross-platform trend analysis',
+            tactics: 'Identify emerging trends before they peak',
+            timing: 'Daily trend monitoring for optimal timing'
+        });
+        
+        setTimeout(() => {
+            addMessage('🔍 Trend Analysis Complete:\n\n🚀 Rising: Micro-tutorials (+340% growth)\n🔥 Peak: Outfit transitions (15M+ posts)\n📈 Emerging: "Plot twist" format (+120% this week)\n💎 Niche opportunity: Industry-specific day-in-life content\n⚡ Quick wins: Use trending audio + educational content', 'ai');
+        }, 3000);
+    }
+    
+    function uploadContent() {
+        addMessage('📱 Upload your content and I\'ll analyze its viral potential, suggest improvements, optimal posting times, hashtag strategies, and engagement tactics!', 'ai');
+        // In a real implementation, this would open a file upload dialog
+    }
+    
+    function exportStrategy() {
+        const strategyData = {
+            platform: currentPlatform,
+            viralMode: viralMode,
+            contentPillars: ['Educational', 'Entertainment', 'Behind-the-scenes', 'Trending'],
+            postingSchedule: getPlatformTiming(currentPlatform),
+            hashtagStrategy: 'Mix trending + niche + branded',
+            kpis: ['View completion rate', 'Save rate', 'Share rate', 'Follower growth'],
+            monthlyGoals: {
+                followers: '+10K',
+                avgViews: '100K+',
+                viralVideos: '5+',
+                engagementRate: '8%+'
+            }
+        };
+        
+        const blob = new Blob([JSON.stringify(strategyData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tokboost_strategy_${currentPlatform}_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        addMessage('📋 Growth strategy exported successfully! Includes content pillars, posting schedule, hashtag strategy, and KPI tracking.', 'ai');
+    }
+    
+    function clearChat() {
+        if (confirm('Are you sure you want to clear this strategy session?')) {
+            document.getElementById('messagesContainer').innerHTML = '';
+            messageCount = 0;
+            addMessage(`Welcome back to TokBoost! Ready to create viral content for ${currentPlatform}? Let's dominate the algorithm! 🚀`, 'ai');
+        }
+    }
+    
+    function toggleSetting(toggle) {
+        toggle.classList.toggle('active');
+    }
+    
+    function adjustTextareaHeight(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 150) + 'px';
+    }
+    
+    function updateGrowthMetrics(metrics) {
+        if (metrics) {
+            // Update metrics in the analytics panel
+            console.log('Updating metrics:', metrics);
+        }
+    }
+    
+    // Event listeners
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    
+    document.getElementById('messageInput').addEventListener('input', function() {
+        adjustTextareaHeight(this);
+    });
+    
+    // Initialize on page load
+    window.addEventListener('load', function() {
+        document.getElementById('messageInput').focus();
+    });
+</script>
 {% endblock %}

@@ -40,38 +40,38 @@
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* Animated Background */
-        .bg-animation {
+        /* Performance optimizations */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .navbar, .dropdown-menu, .mobile-menu {
+            will-change: transform;
+        }
+
+        /* Static Background - Performance Optimized */
+        .bg-static {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: linear-gradient(45deg, #0a0a0f, #12121a, #1a1a2e);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            background: linear-gradient(135deg, #0a0a0f 0%, #12121a 50%, #1a1a2e 100%);
         }
 
         /* Navigation */
-        .navbar {
+                .navbar {
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(10, 10, 15, 0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.98);
             border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            padding: 1rem 0;
-            transition: all 0.3s ease;
-        }
 
         .navbar.scrolled {
             background: rgba(10, 10, 15, 0.98);
@@ -156,23 +156,12 @@
             cursor: pointer;
         }
 
-        .dropdown-menu {
+                .dropdown-menu {
             position: absolute;
             top: 100%;
             left: 0;
-            background: rgba(18, 18, 26, 0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(18, 18, 26, 0.98);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1rem 0;
-            min-width: 280px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 1001;
-        }
 
         .dropdown:hover .dropdown-menu {
             opacity: 1;
@@ -275,12 +264,7 @@
             left: 0;
             width: 100%;
             background: rgba(10, 10, 15, 0.98);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-color);
-            padding: 2rem;
-        }
-
-        .mobile-nav-links {
+            border-top: 1px solid var(--border-color);        .mobile-nav-links {
             list-style: none;
             padding: 0;
         }
@@ -294,9 +278,22 @@
             text-decoration: none;
             font-size: 1.1rem;
             font-weight: 500;
-            display: block;
-            padding: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 0;
             border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--purple-primary);
+            transform: translateX(5px);
+        }
+
+        .mobile-nav-links a i {
+            width: 20px;
+            text-align: center;
         }
 
         /* Main Content */
@@ -338,7 +335,6 @@
             border-radius: 20px;
             padding: 2rem;
             border: 1px solid var(--border-color);
-            backdrop-filter: blur(20px);
             transition: all 0.3s ease;
             margin-bottom: 2rem;
         }
@@ -500,7 +496,7 @@
 </head>
 <body>
     <!-- Animated Background -->
-    <div class="bg-animation"></div>
+    <div class="bg-static"></div>
 
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
@@ -508,9 +504,9 @@
             <a href="/" class="logo">Just Enjoy AI</a>
             
             <ul class="nav-links">
-                <li class="nav-item"><a href="/" {% if request.endpoint == 'index' %}class="active"{% endif %}>Home</a></li>
+                <!-- Agents Dropdown -->
                 <li class="nav-item dropdown">
-                    <a href="#" class="dropdown-toggle" {% if request.endpoint and 'agent' in request.endpoint %}class="active"{% endif %}>
+                    <a href="#" class="dropdown-toggle{% if request.endpoint and 'agent' in request.endpoint %} active{% endif %}">
                         Agents <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu">
@@ -586,12 +582,154 @@
                         </a>
                     </div>
                 </li>
-                <li class="nav-item"><a href="/products" {% if request.endpoint == 'products' %}class="active"{% endif %}>Products</a></li>
-                <li class="nav-item"><a href="/solutions" {% if request.endpoint == 'solutions' %}class="active"{% endif %}>Solutions</a></li>
-                <li class="nav-item"><a href="/pricing" {% if request.endpoint == 'pricing' %}class="active"{% endif %}>Pricing</a></li>
-                <li class="nav-item"><a href="/docs" {% if request.endpoint == 'docs' %}class="active"{% endif %}>Docs</a></li>
-                <li class="nav-item"><a href="/about" {% if request.endpoint == 'about' %}class="active"{% endif %}>About</a></li>
-                <li class="nav-item"><a href="/contact" {% if request.endpoint == 'contact' %}class="active"{% endif %}>Contact</a></li>
+                
+                <!-- Products Dropdown -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle{% if request.endpoint == 'products' %} active{% endif %}">
+                        Products <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/products">
+                            <i class="fas fa-cube" style="color: var(--blue-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">All Products</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Browse our product suite</div>
+                            </div>
+                        </a>
+                        <a href="/products/chatbot">
+                            <i class="fas fa-comments" style="color: var(--green-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">AI Chatbots</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Intelligent conversational AI</div>
+                            </div>
+                        </a>
+                        <a href="/products/nlp">
+                            <i class="fas fa-language" style="color: var(--cyan-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Natural Language Processing</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Advanced text analysis</div>
+                            </div>
+                        </a>
+                        <a href="/products/computer-vision">
+                            <i class="fas fa-eye" style="color: var(--orange-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Computer Vision</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Image & video analysis</div>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Solutions Dropdown -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle{% if request.endpoint == 'solutions' %} active{% endif %}">
+                        Solutions <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/solutions">
+                            <i class="fas fa-lightbulb" style="color: var(--purple-primary);"></i>
+                            <div>
+                                <div style="font-weight: 600;">All Solutions</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Industry-specific solutions</div>
+                            </div>
+                        </a>
+                        <a href="/solutions/healthcare">
+                            <i class="fas fa-heartbeat" style="color: var(--red-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Healthcare</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Medical AI solutions</div>
+                            </div>
+                        </a>
+                        <a href="/solutions/finance">
+                            <i class="fas fa-chart-line" style="color: var(--green-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Finance</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Financial AI tools</div>
+                            </div>
+                        </a>
+                        <a href="/solutions/education">
+                            <i class="fas fa-graduation-cap" style="color: var(--blue-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Education</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Educational AI platforms</div>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Resources Dropdown -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle">
+                        Resources <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/docs">
+                            <i class="fas fa-book" style="color: var(--blue-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Documentation</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">API docs & guides</div>
+                            </div>
+                        </a>
+                        <a href="/pricing">
+                            <i class="fas fa-tag" style="color: var(--green-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Pricing</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Plans & pricing info</div>
+                            </div>
+                        </a>
+                        <a href="/support">
+                            <i class="fas fa-life-ring" style="color: var(--orange-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Support</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Help & support center</div>
+                            </div>
+                        </a>
+                        <a href="/blog">
+                            <i class="fas fa-blog" style="color: var(--purple-primary);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Blog</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Latest news & insights</div>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Company Dropdown -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle">
+                        Company <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/about">
+                            <i class="fas fa-info-circle" style="color: var(--blue-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">About Us</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Our story & mission</div>
+                            </div>
+                        </a>
+                        <a href="/contact">
+                            <i class="fas fa-envelope" style="color: var(--purple-primary);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Contact</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Get in touch with us</div>
+                            </div>
+                        </a>
+                        <a href="/careers">
+                            <i class="fas fa-briefcase" style="color: var(--green-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Careers</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Join our team</div>
+                            </div>
+                        </a>
+                        <a href="/press">
+                            <i class="fas fa-newspaper" style="color: var(--orange-accent);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Press</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Media & press releases</div>
+                            </div>
+                        </a>
+                    </div>
+                </li>
             </ul>
             
             <div class="auth-buttons">
@@ -607,16 +745,16 @@
         <!-- Mobile Menu -->
         <div class="mobile-menu" id="mobileMenu">
             <ul class="mobile-nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/agents">Agents</a></li>
-                <li><a href="/products">Products</a></li>
-                <li><a href="/solutions">Solutions</a></li>
-                <li><a href="/pricing">Pricing</a></li>
-                <li><a href="/docs">Documentation</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/signin" style="color: var(--purple-primary);">Sign In</a></li>
-                <li><a href="/signup" style="color: var(--purple-primary);">Get Started</a></li>
+                <li><a href="/agents"><i class="fas fa-robot"></i> Agents</a></li>
+                <li><a href="/products"><i class="fas fa-cube"></i> Products</a></li>
+                <li><a href="/solutions"><i class="fas fa-lightbulb"></i> Solutions</a></li>
+                <li><a href="/docs"><i class="fas fa-book"></i> Documentation</a></li>
+                <li><a href="/pricing"><i class="fas fa-tag"></i> Pricing</a></li>
+                <li><a href="/about"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="/contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="/support"><i class="fas fa-life-ring"></i> Support</a></li>
+                <li><a href="/signin" style="color: var(--purple-primary);"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+                <li><a href="/signup" style="color: var(--purple-primary);"><i class="fas fa-user-plus"></i> Get Started</a></li>
             </ul>
         </div>
     </nav>
