@@ -261,6 +261,126 @@ def create_app():
         """Training and education"""
         return render_template('support/training.html')
 
+    # Additional Product Subpages
+    @app.route('/products/chatbot')
+    def products_chatbot_detail():
+        """AI Chatbots detailed page"""
+        return render_template('products/chatbot.html')
+    
+    @app.route('/products/nlp')
+    def products_nlp_detail():
+        """Natural Language Processing detailed page"""
+        return render_template('products/nlp.html')
+    
+    @app.route('/products/computer-vision')
+    def products_computer_vision_detail():
+        """Computer Vision detailed page"""
+        return render_template('products/computer_vision.html')
+    
+    @app.route('/products/speech')
+    def products_speech_detail():
+        """Speech AI detailed page"""
+        return render_template('products/speech.html')
+    
+    @app.route('/products/translation')
+    def products_translation_detail():
+        """Translation Services detailed page"""
+        return render_template('products/translation.html')
+    
+    @app.route('/products/generative-ai')
+    def products_generative_ai_detail():
+        """Generative AI detailed page"""
+        return render_template('products/generative_ai.html')
+
+    # Additional Solutions Subpages
+    @app.route('/solutions/healthcare')
+    def solutions_healthcare_detail():
+        """Healthcare solutions detailed page"""
+        return render_template('solutions/healthcare.html')
+    
+    @app.route('/solutions/finance')
+    def solutions_finance_detail():
+        """Finance solutions detailed page"""
+        return render_template('solutions/finance.html')
+    
+    @app.route('/solutions/education')
+    def solutions_education_detail():
+        """Education solutions detailed page"""
+        return render_template('solutions/education.html')
+    
+    @app.route('/solutions/retail')
+    def solutions_retail_detail():
+        """Retail solutions detailed page"""
+        return render_template('solutions/retail.html')
+    
+    @app.route('/solutions/customer-support')
+    def solutions_customer_support_detail():
+        """Customer Support solutions detailed page"""
+        return render_template('solutions/customer_support.html')
+    
+    @app.route('/solutions/marketing')
+    def solutions_marketing_detail():
+        """Marketing solutions detailed page"""
+        return render_template('solutions/marketing.html')
+
+    # Additional Documentation Subpages
+    @app.route('/docs/api')
+    def docs_api_detail():
+        """API Reference detailed page"""
+        return render_template('docs/api.html')
+    
+    @app.route('/docs/sdks')
+    def docs_sdks_detail():
+        """SDKs and Libraries detailed page"""
+        return render_template('docs/sdks.html')
+    
+    @app.route('/docs/tutorials')
+    def docs_tutorials_detail():
+        """Tutorials and Guides detailed page"""
+        return render_template('docs/tutorials.html')
+
+    # Company Subpages
+    @app.route('/careers')
+    def careers_detail():
+        """Careers detailed page"""
+        return render_template('company/careers.html')
+    
+    @app.route('/blog')
+    def blog_detail():
+        """Blog and insights detailed page"""
+        return render_template('company/blog.html')
+    
+    @app.route('/news')
+    def news_detail():
+        """News and press releases detailed page"""
+        return render_template('company/news.html')
+    
+    @app.route('/partners')
+    def partners_detail():
+        """Partner program detailed page"""
+        return render_template('company/partners.html')
+
+    # Support Subpages
+    @app.route('/support/contact')
+    def support_contact_detail():
+        """Contact support detailed page"""
+        return render_template('support/contact.html')
+    
+    @app.route('/support/billing')
+    def support_billing_detail():
+        """Billing support detailed page"""
+        return render_template('support/billing.html')
+    
+    @app.route('/support/technical')
+    def support_technical_detail():
+        """Technical support detailed page"""
+        return render_template('support/technical.html')
+    
+    @app.route('/support/training')
+    def support_training_detail():
+        """Training and education detailed page"""
+        return render_template('support/training.html')
+
     # Community & Status
     @app.route('/community')
     def community():
@@ -277,6 +397,57 @@ def create_app():
     def contact():
         """Contact us"""
         return render_template('contact.html')
+
+    # Agents Section
+    @app.route('/agents')
+    def agents_overview():
+        """All agents overview page"""
+        return render_template('agents/index.html')
+    
+    @app.route('/agents/ai-girlfriend')
+    def agent_ai_girlfriend():
+        """AI Girlfriend agent page"""
+        return render_template('agents/ai_girlfriend.html')
+    
+    @app.route('/agents/emo-ai')
+    def agent_emo_ai():
+        """EmoAI agent page"""
+        return render_template('agents/emo_ai.html')
+    
+    @app.route('/agents/pdf-mind')
+    def agent_pdf_mind():
+        """PDFMind agent page"""
+        return render_template('agents/pdf_mind.html')
+    
+    @app.route('/agents/chat-revive')
+    def agent_chat_revive():
+        """ChatRevive agent page"""
+        return render_template('agents/chat_revive.html')
+    
+    @app.route('/agents/tok-boost')
+    def agent_tok_boost():
+        """TokBoost agent page"""
+        return render_template('agents/tok_boost.html')
+    
+    @app.route('/agents/you-gen')
+    def agent_you_gen():
+        """YouGen agent page"""
+        return render_template('agents/you_gen.html')
+    
+    @app.route('/agents/agent-x')
+    def agent_agent_x():
+        """AgentX agent page"""
+        return render_template('agents/agent_x.html')
+    
+    @app.route('/agents/auto-chat')
+    def agent_auto_chat():
+        """AutoChat agent page"""
+        return render_template('agents/auto_chat.html')
+    
+    @app.route('/agents/cv-smash')
+    def agent_cv_smash():
+        """CVSmash agent page"""
+        return render_template('agents/cv_smash.html')
 
     # Agent Dashboard (existing)
     @app.route('/agents-dashboard')

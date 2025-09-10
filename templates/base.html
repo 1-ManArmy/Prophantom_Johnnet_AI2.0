@@ -65,7 +65,7 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(10, 10, 15, 0.9);
+            background: rgba(10, 10, 15, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
             z-index: 1000;
@@ -73,8 +73,13 @@
             transition: all 0.3s ease;
         }
 
+        .navbar.scrolled {
+            background: rgba(10, 10, 15, 0.98);
+            padding: 0.5rem 0;
+        }
+
         .nav-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -83,19 +88,29 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 800;
             background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .nav-links {
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
         }
 
         .nav-links a {
@@ -104,17 +119,21 @@
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
         }
 
         .nav-links a:hover, .nav-links a.active {
             color: var(--purple-primary);
+            background: rgba(139, 92, 246, 0.1);
         }
 
         .nav-links a::after {
             content: '';
             position: absolute;
             bottom: -5px;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 0;
             height: 2px;
             background: linear-gradient(90deg, var(--purple-primary), var(--blue-accent));
@@ -122,7 +141,162 @@
         }
 
         .nav-links a:hover::after, .nav-links a.active::after {
+            width: 80%;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 0;
+            min-width: 280px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--text-primary);
+            transform: translateX(5px);
+        }
+
+        .dropdown-menu a::after {
+            display: none;
+        }
+
+        .dropdown-menu .agent-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .agent-icon.ai-girlfriend { background: linear-gradient(135deg, #ec4899, #f97316); }
+        .agent-icon.emo-ai { background: linear-gradient(135deg, #8b5cf6, #3b82f6); }
+        .agent-icon.pdf-mind { background: linear-gradient(135deg, #10b981, #059669); }
+        .agent-icon.chat-revive { background: linear-gradient(135deg, #f59e0b, #eab308); }
+        .agent-icon.tok-boost { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .agent-icon.you-gen { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .agent-icon.agent-x { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        .agent-icon.auto-chat { background: linear-gradient(135deg, #84cc16, #65a30d); }
+        .agent-icon.cv-smash { background: linear-gradient(135deg, #d946ef, #c026d3); }
+
+        /* Auth Buttons */
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-auth {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-signin {
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+        }
+
+        .btn-signin:hover {
+            color: var(--purple-primary);
+            border-color: var(--purple-primary);
+        }
+
+        .btn-signup {
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-secondary));
+            color: white;
+            border: 1px solid transparent;
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
             width: 100%;
+            background: rgba(10, 10, 15, 0.98);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-color);
+            padding: 2rem;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1rem;
+        }
+
+        .mobile-nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            display: block;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
         }
 
         /* Main Content */
@@ -250,9 +424,31 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
             .nav-links {
+                gap: 1.5rem;
+            }
+            
+            .dropdown-menu {
+                min-width: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links, .auth-buttons {
                 display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .mobile-menu.active {
+                display: block;
             }
             
             .page-title {
@@ -261,6 +457,30 @@
             
             .container {
                 padding: 1rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            .navbar {
+                padding: 0.8rem 0;
+            }
+            
+            .main-content {
+                padding-top: 80px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
         }
 
@@ -286,14 +506,117 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="/" class="logo">Just Enjoy AI</a>
+            
             <ul class="nav-links">
-                <li><a href="/" {% if request.endpoint == 'index' %}class="active"{% endif %}>Home</a></li>
-                <li><a href="/products" {% if request.endpoint == 'products' %}class="active"{% endif %}>Products</a></li>
-                <li><a href="/solutions" {% if request.endpoint == 'solutions' %}class="active"{% endif %}>Solutions</a></li>
-                <li><a href="/pricing" {% if request.endpoint == 'pricing' %}class="active"{% endif %}>Pricing</a></li>
-                <li><a href="/docs" {% if request.endpoint == 'docs' %}class="active"{% endif %}>Docs</a></li>
-                <li><a href="/about" {% if request.endpoint == 'about' %}class="active"{% endif %}>About</a></li>
-                <li><a href="/contact" {% if request.endpoint == 'contact' %}class="active"{% endif %}>Contact</a></li>
+                <li class="nav-item"><a href="/" {% if request.endpoint == 'index' %}class="active"{% endif %}>Home</a></li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle" {% if request.endpoint and 'agent' in request.endpoint %}class="active"{% endif %}>
+                        Agents <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/agents">
+                            <div class="agent-icon" style="background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));"><i class="fas fa-robot"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">All Agents</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Browse all 9 AI agents</div>
+                            </div>
+                        </a>
+                        <a href="/agents/ai-girlfriend">
+                            <div class="agent-icon ai-girlfriend"><i class="fas fa-heart"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">AI Girlfriend</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Companion & support</div>
+                            </div>
+                        </a>
+                        <a href="/agents/emo-ai">
+                            <div class="agent-icon emo-ai"><i class="fas fa-brain"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">EmoAI</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Emotional intelligence</div>
+                            </div>
+                        </a>
+                        <a href="/agents/pdf-mind">
+                            <div class="agent-icon pdf-mind"><i class="fas fa-file-pdf"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">PDFMind</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Document analysis</div>
+                            </div>
+                        </a>
+                        <a href="/agents/chat-revive">
+                            <div class="agent-icon chat-revive"><i class="fas fa-comments"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">ChatRevive</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Conversation revival</div>
+                            </div>
+                        </a>
+                        <a href="/agents/tok-boost">
+                            <div class="agent-icon tok-boost"><i class="fas fa-rocket"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">TokBoost</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Social media growth</div>
+                            </div>
+                        </a>
+                        <a href="/agents/you-gen">
+                            <div class="agent-icon you-gen"><i class="fas fa-video"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">YouGen</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Content generation</div>
+                            </div>
+                        </a>
+                        <a href="/agents/agent-x">
+                            <div class="agent-icon agent-x"><i class="fas fa-times"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">AgentX</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Multi-purpose AI</div>
+                            </div>
+                        </a>
+                        <a href="/agents/auto-chat">
+                            <div class="agent-icon auto-chat"><i class="fas fa-comment-dots"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">AutoChat</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Automated conversations</div>
+                            </div>
+                        </a>
+                        <a href="/agents/cv-smash">
+                            <div class="agent-icon cv-smash"><i class="fas fa-file-alt"></i></div>
+                            <div>
+                                <div style="font-weight: 600;">CVSmash</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Resume optimization</div>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="/products" {% if request.endpoint == 'products' %}class="active"{% endif %}>Products</a></li>
+                <li class="nav-item"><a href="/solutions" {% if request.endpoint == 'solutions' %}class="active"{% endif %}>Solutions</a></li>
+                <li class="nav-item"><a href="/pricing" {% if request.endpoint == 'pricing' %}class="active"{% endif %}>Pricing</a></li>
+                <li class="nav-item"><a href="/docs" {% if request.endpoint == 'docs' %}class="active"{% endif %}>Docs</a></li>
+                <li class="nav-item"><a href="/about" {% if request.endpoint == 'about' %}class="active"{% endif %}>About</a></li>
+                <li class="nav-item"><a href="/contact" {% if request.endpoint == 'contact' %}class="active"{% endif %}>Contact</a></li>
+            </ul>
+            
+            <div class="auth-buttons">
+                <a href="/signin" class="btn-auth btn-signin">Sign In</a>
+                <a href="/signup" class="btn-auth btn-signup">Get Started</a>
+            </div>
+            
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <ul class="mobile-nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/agents">Agents</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/solutions">Solutions</a></li>
+                <li><a href="/pricing">Pricing</a></li>
+                <li><a href="/docs">Documentation</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/signin" style="color: var(--purple-primary);">Sign In</a></li>
+                <li><a href="/signup" style="color: var(--purple-primary);">Get Started</a></li>
             </ul>
         </div>
     </nav>
@@ -305,7 +628,19 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
+                <div class="footer-content">            <div class="footer-section">
+                <h3>AI Agents</h3>
+                <a href="/agents">All Agents (9)</a>
+                <a href="/agents/ai-girlfriend">AI Girlfriend</a>
+                <a href="/agents/emo-ai">EmoAI</a>
+                <a href="/agents/pdf-mind">PDFMind</a>
+                <a href="/agents/chat-revive">ChatRevive</a>
+                <a href="/agents/tok-boost">TokBoost</a>
+                <a href="/agents/you-gen">YouGen</a>
+                <a href="/agents/agent-x">AgentX</a>
+                <a href="/agents/auto-chat">AutoChat</a>
+                <a href="/agents/cv-smash">CVSmash</a>
+            </div>
             <div class="footer-section">
                 <h3>Products</h3>
                 <a href="/products/chatbot">AI Chatbots</a>
@@ -375,6 +710,54 @@
             }
         });
 
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        if (mobileMenuToggle && mobileMenu) {
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                if (mobileMenu.classList.contains('active')) {
+                    icon.className = 'fas fa-times';
+                } else {
+                    icon.className = 'fas fa-bars';
+                }
+            });
+        }
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                icon.className = 'fas fa-bars';
+            });
+        });
+
+        // Close mobile menu on outside click
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+                const icon = mobileMenuToggle.querySelector('i');
+                icon.className = 'fas fa-bars';
+            }
+        });
+
+        // Dropdown menu keyboard navigation
+        document.querySelectorAll('.dropdown').forEach(dropdown => {
+            const toggle = dropdown.querySelector('.dropdown-toggle');
+            const menu = dropdown.querySelector('.dropdown-menu');
+            
+            toggle.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    menu.style.opacity = menu.style.opacity === '1' ? '0' : '1';
+                    menu.style.visibility = menu.style.visibility === 'visible' ? 'hidden' : 'visible';
+                }
+            });
+        });
+
         // Fade in animation on scroll
         const observerOptions = {
             threshold: 0.1,
@@ -403,6 +786,25 @@
                         behavior: 'smooth',
                         block: 'start'
                     });
+                }
+            });
+        });
+
+        // Preload important pages for better performance
+        const importantPages = ['/agents', '/products', '/solutions', '/pricing', '/docs'];
+        importantPages.forEach(page => {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = page;
+            document.head.appendChild(link);
+        });
+
+        // Add loading states for better UX
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!this.href.includes('#') && !this.target) {
+                    this.style.opacity = '0.7';
+                    this.style.pointerEvents = 'none';
                 }
             });
         });

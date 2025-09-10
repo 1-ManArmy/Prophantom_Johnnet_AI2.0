@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}PDFMind - Document Intelligence Agent{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        padding: 8rem 0 6rem;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+        border-radius: 30px;
+        margin: 2rem;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        text-align: center;
+    }
+
+    .hero-icon {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        margin: 0 auto 2rem;
+        box-shadow: 0 20px 60px rgba(16, 185, 129, 0.4);
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 4rem 0;
+    }
+
+    .feature-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        backdrop-filter: blur(20px);
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        border-color: #10b981;
+        box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
+    }
+
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .demo-section {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 4rem 0;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .upload-area {
+        border: 2px dashed rgba(16, 185, 129, 0.3);
+        border-radius: 15px;
+        padding: 3rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .upload-area:hover {
+        border-color: #10b981;
+        background: rgba(16, 185, 129, 0.05);
+    }
+
+    .cta-section {
+        text-align: center;
+        padding: 4rem 0;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+        border-radius: 30px;
+        margin: 4rem 2rem;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section fade-in">
+        <div class="hero-icon">
+            <i class="fas fa-file-pdf"></i>
+        </div>
+        <h1 class="page-title">PDFMind</h1>
+        <p class="page-subtitle">Revolutionary Document Intelligence & Analysis</p>
+        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+            Transform how you interact with documents. PDFMind reads, understands, and answers questions 
+            about your PDFs with human-like comprehension, making document analysis effortless.
+        </p>
+        <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="#demo" class="btn btn-primary">
+                <i class="fas fa-play"></i> Try Demo
+            </a>
+            <a href="/signup" class="btn" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;">
+                <i class="fas fa-upload"></i> Upload PDF
+            </a>
+        </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="feature-grid fade-in">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Smart Document Search</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Find specific information instantly across multiple documents. Advanced semantic search 
+                understands context and meaning, not just keywords.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-question-circle"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Q&A from Documents</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Ask questions about your documents and get accurate, contextual answers. PDFMind 
+                understands complex queries and provides detailed responses with source citations.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-compress-alt"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Intelligent Summarization</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Generate comprehensive summaries of any length document. Extract key points, 
+                main arguments, and critical information automatically.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-copy"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Multi-Document Analysis</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Compare multiple documents, find connections, and analyze relationships between 
+                different sources. Perfect for research and analysis.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-language"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Multi-Language Support</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Works with documents in multiple languages. Translate content, answer questions 
+                across language barriers, and maintain context integrity.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Data Extraction</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Extract structured data from unstructured documents. Tables, figures, key metrics, 
+                and important data points automatically identified and organized.
+            </p>
+        </div>
+    </div>
+
+    <!-- Demo Section -->
+    <div class="demo-section fade-in" id="demo">
+        <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Try PDFMind Demo
+        </h2>
+        
+        <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+            <input type="file" id="fileInput" accept=".pdf" style="display: none;" onchange="handleFileUpload(event)">
+            <div style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+                Upload Your PDF Document
+            </h3>
+            <p style="color: var(--text-secondary);">
+                Click here or drag and drop your PDF file to start analyzing
+            </p>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 1rem;">
+                Maximum file size: 10MB • Supported format: PDF
+            </p>
+        </div>
+
+        <div id="analysisResults" style="margin-top: 2rem; display: none;">
+            <div class="card" style="padding: 2rem;">
+                <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+                    Document Analysis Complete
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 800; color: #10b981;">247</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Pages Analyzed</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 800; color: #10b981;">15</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Key Topics Found</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 800; color: #10b981;">8</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Tables Extracted</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <h4 style="font-weight: 600; margin-bottom: 1rem; color: var(--text-primary);">Ask Questions About This Document:</h4>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;" onclick="askQuestion('What are the main findings?')">
+                            What are the main findings?
+                        </button>
+                        <button class="btn" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;" onclick="askQuestion('Summarize key points')">
+                            Summarize key points
+                        </button>
+                        <button class="btn" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;" onclick="askQuestion('Extract important data')">
+                            Extract important data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section fade-in">
+        <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Transform Your Document Workflow
+        </h2>
+        <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
+            Stop reading through hundreds of pages. Let PDFMind find the answers for you.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/signup" class="btn btn-primary">
+                <i class="fas fa-rocket"></i> Start Free Trial
+            </a>
+            <a href="/agents" class="btn" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981;">
+                <i class="fas fa-arrow-left"></i> View All Agents
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file && file.type === 'application/pdf') {
+        // Simulate file upload and analysis
+        setTimeout(() => {
+            document.getElementById('analysisResults').style.display = 'block';
+            document.querySelector('.upload-area').style.display = 'none';
+        }, 2000);
+    } else {
+        alert('Please select a valid PDF file.');
+    }
+}
+
+function askQuestion(question) {
+    alert(`Demo Question: "${question}"\n\nIn the full version, PDFMind would analyze your document and provide a detailed answer with source citations.`);
+}
+
+// Drag and drop functionality
+const uploadArea = document.querySelector('.upload-area');
+
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#10b981';
+    uploadArea.style.background = 'rgba(16, 185, 129, 0.1)';
+});
+
+uploadArea.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+    uploadArea.style.background = 'transparent';
+});
+
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+    uploadArea.style.background = 'transparent';
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        document.getElementById('fileInput').files = files;
+        handleFileUpload({ target: { files: files } });
+    }
+});
+</script>
+{% endblock %}

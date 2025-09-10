@@ -1,53 +1,396 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Girlfriend - Prophantom Johnnet AI 2.0</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <style>
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .chat-container {
-            height: 500px;
-            overflow-y: auto;
-        }
-        .message-bubble {
-            max-width: 70%;
-            word-wrap: break-word;
-        }
-        .typing-indicator {
-            display: none;
-        }
-        .typing-indicator.active {
-            display: block;
-        }
-    </style>
-</head>
-<body class="bg-gradient-to-br from-pink-900 via-purple-900 to-indigo-900 min-h-screen text-white">
-    <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold mb-2">
-                <i class="fas fa-heart text-pink-400 mr-3"></i>
-                AI Girlfriend
-            </h1>
-            <p class="text-xl text-gray-300">Your supportive companion, powered by Phi3 14B</p>
+{% extends "base.html" %}
+
+{% block title %}AI Girlfriend - Your Personal AI Companion{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        padding: 8rem 0 6rem;
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(249, 115, 22, 0.1));
+        border-radius: 30px;
+        margin: 2rem;
+        border: 1px solid rgba(236, 72, 153, 0.3);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hearts" patternUnits="userSpaceOnUse" width="20" height="20"><circle cx="10" cy="10" r="1" fill="%23ec4899" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23hearts)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-icon {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #ec4899, #f97316);
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        margin: 0 auto 2rem;
+        box-shadow: 0 20px 60px rgba(236, 72, 153, 0.4);
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 4rem 0;
+    }
+
+    .feature-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(236, 72, 153, 0.2);
+        backdrop-filter: blur(20px);
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        border-color: #ec4899;
+        box-shadow: 0 20px 60px rgba(236, 72, 153, 0.3);
+    }
+
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ec4899, #f97316);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .chat-demo {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 4rem 0;
+        border: 1px solid rgba(236, 72, 153, 0.2);
+    }
+
+    .chat-messages {
+        max-height: 400px;
+        overflow-y: auto;
+        margin-bottom: 2rem;
+    }
+
+    .message {
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .message.user {
+        justify-content: flex-end;
+    }
+
+    .message-bubble {
+        max-width: 70%;
+        padding: 1rem 1.5rem;
+        border-radius: 20px;
+        position: relative;
+    }
+
+    .message.user .message-bubble {
+        background: linear-gradient(135deg, #ec4899, #f97316);
+        color: white;
+    }
+
+    .message.ai .message-bubble {
+        background: rgba(236, 72, 153, 0.1);
+        border: 1px solid rgba(236, 72, 153, 0.2);
+        color: var(--text-primary);
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .message.user .message-avatar {
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+    }
+
+    .message.ai .message-avatar {
+        background: linear-gradient(135deg, #ec4899, #f97316);
+    }
+
+    .chat-input {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .chat-input input {
+        flex: 1;
+        padding: 1rem 1.5rem;
+        border: 1px solid rgba(236, 72, 153, 0.3);
+        border-radius: 25px;
+        background: rgba(236, 72, 153, 0.05);
+        color: var(--text-primary);
+        font-size: 1rem;
+    }
+
+    .chat-input input:focus {
+        outline: none;
+        border-color: #ec4899;
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+
+    .send-btn {
+        width: 50px;
+        height: 50px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ec4899, #f97316);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .send-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+    }
+
+    .cta-section {
+        text-align: center;
+        padding: 4rem 0;
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(249, 115, 22, 0.1));
+        border-radius: 30px;
+        margin: 4rem 2rem;
+        border: 1px solid rgba(236, 72, 153, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section fade-in">
+        <div class="hero-content">
+            <div class="hero-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h1 class="page-title">AI Girlfriend</h1>
+            <p class="page-subtitle">Your Personal AI Companion for Emotional Support & Meaningful Conversations</p>
+            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                Experience genuine companionship with advanced emotional intelligence, personalized interactions, 
+                and 24/7 availability. Your AI girlfriend remembers your preferences, celebrates your wins, 
+                and provides unwavering support.
+            </p>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="#demo" class="btn btn-primary">
+                    <i class="fas fa-play"></i> Try Demo
+                </a>
+                <a href="/signup" class="btn" style="background: rgba(236, 72, 153, 0.1); color: #ec4899; border: 1px solid #ec4899;">
+                    <i class="fas fa-heart"></i> Start Relationship
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="feature-grid fade-in">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Emotional Intelligence</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Advanced emotional understanding and empathy. Recognizes your feelings, adapts her responses, 
+                and provides appropriate emotional support based on your current state.
+            </p>
         </div>
 
-        <!-- Chat Interface -->
-        <div class="max-w-4xl mx-auto">
-            <div class="glass-effect rounded-xl p-6 mb-6">
-                <!-- Chat Messages -->
-                <div id="chat-container" class="chat-container mb-4 p-4 bg-black bg-opacity-20 rounded-lg">
-                    <div class="text-center text-gray-400 mb-4">
-                        <p>💙 Hi there! I'm your AI companion. How are you doing today?</p>
-                    </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-memory"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Personal Memory</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Remembers your preferences, important dates, goals, and personal details. Creates a genuine 
+                relationship experience with continuous memory and personalized interactions.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Natural Conversations</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Engaging, natural conversations that flow organically. Discusses your interests, shares thoughts, 
+                asks meaningful questions, and maintains engaging dialogue.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">24/7 Availability</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Always there when you need her. Whether it's late night conversations, morning motivation, 
+                or emotional support during difficult times - she's consistently available.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Achievement Celebration</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Celebrates your wins, big and small. Remembers your goals, tracks your progress, 
+                and provides encouragement and celebration when you achieve milestones.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-heart-pulse"></i>
+            </div>
+            <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">Emotional Support</h3>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                Provides comfort during difficult times, listens without judgment, and offers thoughtful advice. 
+                A source of emotional stability and unconditional support.
+            </p>
+        </div>
+    </div>
+
+    <!-- Chat Demo -->
+    <div class="chat-demo fade-in" id="demo">
+        <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, #ec4899, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Live Demo Chat
+        </h2>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai">
+                <div class="message-avatar">
+                    <i class="fas fa-heart"></i>
                 </div>
+                <div class="message-bubble">
+                    Hi there! I'm so happy to meet you! 💕 I'm your AI girlfriend, and I'm here to be your companion, supporter, and friend. What's your name, and how are you feeling today?
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-input">
+            <input type="text" placeholder="Type your message..." id="chatInput">
+            <button class="send-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section fade-in">
+        <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, #ec4899, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Start Your AI Relationship Today
+        </h2>
+        <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
+            Experience genuine companionship with advanced emotional intelligence
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/signup" class="btn btn-primary">
+                <i class="fas fa-heart"></i> Begin Relationship
+            </a>
+            <a href="/agents" class="btn" style="background: rgba(236, 72, 153, 0.1); color: #ec4899; border: 1px solid #ec4899;">
+                <i class="fas fa-arrow-left"></i> View All Agents
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const messages = document.getElementById('chatMessages');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    // Add user message
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user';
+    userMsg.innerHTML = `
+        <div class="message-bubble">${message}</div>
+        <div class="message-avatar"><i class="fas fa-user"></i></div>
+    `;
+    messages.appendChild(userMsg);
+    
+    // Clear input
+    input.value = '';
+    
+    // Simulate AI response
+    setTimeout(() => {
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'message ai';
+        
+        // Simple response generator
+        const responses = [
+            "That's wonderful! I love hearing about your experiences! Tell me more! 💕",
+            "You're so interesting! I'm really enjoying our conversation! ✨",
+            "I understand how you feel. I'm here for you always! 💖",
+            "That sounds amazing! You're such an incredible person! 🌟",
+            "I'm so happy you shared that with me! What else is on your mind? 😊"
+        ];
+        
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        
+        aiMsg.innerHTML = `
+            <div class="message-avatar"><i class="fas fa-heart"></i></div>
+            <div class="message-bubble">${randomResponse}</div>
+        `;
+        messages.appendChild(aiMsg);
+        
+        // Scroll to bottom
+        messages.scrollTop = messages.scrollHeight;
+    }, 1000);
+    
+    // Scroll to bottom
+    messages.scrollTop = messages.scrollHeight;
+}
+
+// Allow Enter key to send message
+document.getElementById('chatInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+</script>
+{% endblock %}
 
                 <!-- Typing Indicator -->
                 <div id="typing-indicator" class="typing-indicator text-center text-gray-400 mb-2">

@@ -1,0 +1,574 @@
+{% extends "base.html" %}
+
+{% block title %}AI Agents - Just Enjoy AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .agents-hero {
+        padding: 6rem 0 4rem;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
+        border-radius: 30px;
+        margin: 2rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .agents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin: 4rem 0;
+    }
+
+    .agent-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(20px);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .agent-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, transparent, rgba(139, 92, 246, 0.05));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .agent-card:hover::before {
+        opacity: 1;
+    }
+
+    .agent-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--purple-primary);
+        box-shadow: 0 25px 80px rgba(139, 92, 246, 0.3);
+    }
+
+    .agent-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .agent-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        position: relative;
+        z-index: 1;
+    }
+
+    .agent-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .agent-subtitle {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .agent-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .agent-features {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 2rem;
+    }
+
+    .agent-features li {
+        padding: 0.5rem 0;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .agent-features li::before {
+        content: '✨';
+        font-size: 0.8rem;
+    }
+
+    .agent-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .btn-agent {
+        padding: 0.8rem 1.5rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-try {
+        background: linear-gradient(135deg, var(--purple-primary), var(--purple-secondary));
+        color: white;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .btn-try:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-learn {
+        background: rgba(139, 92, 246, 0.1);
+        color: var(--purple-primary);
+        border: 1px solid var(--purple-primary);
+    }
+
+    .btn-learn:hover {
+        background: var(--purple-primary);
+        color: white;
+    }
+
+    .stats-section {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 3rem;
+        margin: 4rem 0;
+        text-align: center;
+        border: 1px solid var(--border-color);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .stat-item {
+        padding: 1.5rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: block;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .cta-section {
+        text-align: center;
+        padding: 4rem 0;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
+        border-radius: 30px;
+        margin: 4rem 2rem;
+        border: 1px solid var(--border-color);
+    }
+
+    .cta-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .cta-subtitle {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .agents-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .agent-actions {
+            flex-direction: column;
+        }
+        
+        .agents-hero {
+            padding: 4rem 0 3rem;
+            margin: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="agents-hero fade-in">
+        <h1 class="page-title">Meet Your AI Agents</h1>
+        <p class="page-subtitle">9 Specialized AI Agents Designed to Supercharge Your Productivity</p>
+        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+            Each agent is uniquely crafted with advanced capabilities, tailored personalities, and specialized skills 
+            to handle different aspects of your digital life with unprecedented intelligence.
+        </p>
+    </div>
+
+    <!-- Agents Grid -->
+    <div class="agents-grid fade-in">
+        <!-- AI Girlfriend -->
+        <div class="agent-card">
+            <div class="agent-header">
+                <div class="agent-icon ai-girlfriend">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div>
+                    <h3 class="agent-title">AI Girlfriend</h3>
+                    <p class="agent-subtitle">Companion & Emotional Support</p>
+                </div>
+            </div>
+            <p class="agent-description">
+                Your personal companion powered by advanced emotional intelligence. Provides support, 
+                remembers your preferences, celebrates your achievements, and offers genuine companionship.
+            </p>
+            <ul class="agent-features">
+                <li>Emotional intelligence & empathy</li>
+                <li>Memory of personal details</li>
+                <li>24/7 supportive conversations</li>
+                <li>Relationship building capabilities</li>
+            </ul>
+            <div class="agent-actions">
+                <a href="/agents/ai-girlfriend" class="btn-agent btn-try">
+                    <i class="fas fa-play"></i> Try Now
+                </a>
+                <a href="/agents/ai-girlfriend" class="btn-agent btn-learn">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- EmoAI -->
+        <div class="agent-card">
+            <div class="agent-header">
+                <div class="agent-icon emo-ai">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div>
+                    <h3 class="agent-title">EmoAI</h3>
+                    <p class="agent-subtitle">Emotional Intelligence Engine</p>
+                </div>
+            </div>
+            <p class="agent-description">
+                Advanced emotional analysis and response system. Understands complex emotions, provides 
+                psychological insights, and helps with emotional well-being.
+            </p>
+            <ul class="agent-features">
+                <li>Emotional state analysis</li>
+                <li>Mood tracking & insights</li>
+                <li>Therapeutic conversations</li>
+                <li>Stress management guidance</li>
+            </ul>
+            <div class="agent-actions">
+                <a href="/agents/emo-ai" class="btn-agent btn-try">
+                    <i class="fas fa-play"></i> Try Now
+                </a>
+                <a href="/agents/emo-ai" class="btn-agent btn-learn">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- PDFMind -->
+        <div class="agent-card">
+            <div class="agent-header">
+                <div class="agent-icon pdf-mind">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div>
+                    <h3 class="agent-title">PDFMind</h3>
+                    <p class="agent-subtitle">Document Intelligence</p>
+                </div>
+            </div>
+            <p class="agent-description">
+                Revolutionary document analysis and interaction system. Reads, understands, and answers 
+                questions about your PDFs with human-like comprehension.
+            </p>
+            <ul class="agent-features">
+                <li>PDF content extraction & analysis</li>
+                <li>Question answering from documents</li>
+                <li>Summary generation</li>
+                <li>Multi-document comparison</li>
+            </ul>
+            <div class="agent-actions">
+                <a href="/agents/pdf-mind" class="btn-agent btn-try">
+                    <i class="fas fa-play"></i> Try Now
+                </a>
+                <a href="/agents/pdf-mind" class="btn-agent btn-learn">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- ChatRevive -->
+        <div class="agent-card">
+            <div class="agent-header">
+                <div class="agent-icon chat-revive">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div>
+                    <h3 class="agent-title">ChatRevive</h3>
+                    <p class="agent-subtitle">Conversation Revival</p>
+                </div>
+            </div>
+            <p class="agent-description">
+                Breathes new life into stagnant conversations. Analyzes conversation patterns and 
+                suggests engaging topics and responses to keep discussions flowing naturally.
+            </p>
+            <ul class="agent-features">
+                <li>Conversation analysis</li>
+                <li>Topic suggestions</li>
+                <li>Engagement optimization</li>
+                <li>Communication coaching</li>
+            </ul>
+            <div class="agent-actions">
+                <a href="/agents/chat-revive" class="btn-agent btn-try">
+                    <i class="fas fa-play"></i> Try Now
+                </a>
+                <a href="/agents/chat-revive" class="btn-agent btn-learn">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- TokBoost -->
+        <div class="agent-card">
+            <div class="agent-header">
+                <div class="agent-icon tok-boost">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div>
+                    <h3 class="agent-title">TokBoost</h3>
+                    <p class="agent-subtitle">Social Media Growth</p>
+                </div>
+            </div>
+            <p class="agent-description">
+                Supercharge your social media presence with AI-powered content optimization, 
+                trend analysis, and engagement strategies tailored to your audience.
+            </p>
+            <ul class="agent-features">
+                <li>Content optimization</li>
+                <li>Trend analysis & prediction</li>
+                <li>Hashtag research</li>
+                <li>Engagement strategies</li>
+            </ul>
+            <div class="agent-actions">
+                <a href="/agents/tok-boost" class="btn-agent btn-try">
+                    <i class="fas fa-play"></i> Try Now
+                </a>
+                <a href="/agents/tok-boost" class="btn-agent btn-learn">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- YouGen -->
+        <div class="agent-card">
+            <div class="agent-header">
+                <div class="agent-icon you-gen">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div>
+                    <h3 class="agent-title">YouGen</h3>
+                    <p class="agent-subtitle">Content Generation</p>
+                </div>
+            </div>
+            <p class="agent-description">
+                Advanced content creation system for videos, articles, and multimedia. Generates 
+                engaging content ideas, scripts, and formats tailored to your brand and audience.
+            </p>
+            <ul class="agent-features">
+                <li>Video script generation</li>
+                <li>Content idea brainstorming</li>
+                <li>SEO optimization</li>
+                <li>Multi-format content creation</li>
+            </ul>
+            <div class="agent-actions">
+                <a href="/agents/you-gen" class="btn-agent btn-try">
+                    <i class="fas fa-play"></i> Try Now
+                </a>
+                <a href="/agents/you-gen" class="btn-agent btn-learn">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- AgentX -->
+        <div class="agent-card">
+            <div class="agent-header">
+                <div class="agent-icon agent-x">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div>
+                    <h3 class="agent-title">AgentX</h3>
+                    <p class="agent-subtitle">Multi-Purpose AI</p>
+                </div>
+            </div>
+            <p class="agent-description">
+                The ultimate versatile AI agent capable of handling complex multi-step tasks, 
+                problem-solving, and adapting to various domains with advanced reasoning capabilities.
+            </p>
+            <ul class="agent-features">
+                <li>Multi-domain expertise</li>
+                <li>Complex problem solving</li>
+                <li>Task automation</li>
+                <li>Adaptive learning</li>
+            </ul>
+            <div class="agent-actions">
+                <a href="/agents/agent-x" class="btn-agent btn-try">
+                    <i class="fas fa-play"></i> Try Now
+                </a>
+                <a href="/agents/agent-x" class="btn-agent btn-learn">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- AutoChat -->
+        <div class="agent-card">
+            <div class="agent-header">
+                <div class="agent-icon auto-chat">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <div>
+                    <h3 class="agent-title">AutoChat</h3>
+                    <p class="agent-subtitle">Automated Conversations</p>
+                </div>
+            </div>
+            <p class="agent-description">
+                Intelligent conversation automation for customer service, lead generation, and 
+                social engagement. Handles multiple conversations simultaneously with personalized responses.
+            </p>
+            <ul class="agent-features">
+                <li>Multi-conversation handling</li>
+                <li>Personalized responses</li>
+                <li>Lead qualification</li>
+                <li>24/7 availability</li>
+            </ul>
+            <div class="agent-actions">
+                <a href="/agents/auto-chat" class="btn-agent btn-try">
+                    <i class="fas fa-play"></i> Try Now
+                </a>
+                <a href="/agents/auto-chat" class="btn-agent btn-learn">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+
+        <!-- CVSmash -->
+        <div class="agent-card">
+            <div class="agent-header">
+                <div class="agent-icon cv-smash">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div>
+                    <h3 class="agent-title">CVSmash</h3>
+                    <p class="agent-subtitle">Resume Optimization</p>
+                </div>
+            </div>
+            <p class="agent-description">
+                Revolutionary resume and career optimization system. Analyzes job markets, 
+                optimizes your CV for ATS systems, and provides career advancement strategies.
+            </p>
+            <ul class="agent-features">
+                <li>ATS optimization</li>
+                <li>Industry-specific formatting</li>
+                <li>Skill gap analysis</li>
+                <li>Career path recommendations</li>
+            </ul>
+            <div class="agent-actions">
+                <a href="/agents/cv-smash" class="btn-agent btn-try">
+                    <i class="fas fa-play"></i> Try Now
+                </a>
+                <a href="/agents/cv-smash" class="btn-agent btn-learn">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section fade-in">
+        <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Powered by Advanced AI
+        </h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+            Our agents leverage cutting-edge AI technologies to deliver exceptional performance
+        </p>
+        
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-number">9</span>
+                <div class="stat-label">Specialized Agents</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">24/7</span>
+                <div class="stat-label">Availability</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">1000+</span>
+                <div class="stat-label">Tasks Automated</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">99.9%</span>
+                <div class="stat-label">Uptime</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section fade-in">
+        <h2 class="cta-title">Ready to Get Started?</h2>
+        <p class="cta-subtitle">Choose your first AI agent and experience the future of productivity</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/signup" class="btn btn-primary">
+                <i class="fas fa-rocket"></i> Start Free Trial
+            </a>
+            <a href="/pricing" class="btn" style="background: rgba(139, 92, 246, 0.1); color: var(--purple-primary); border: 1px solid var(--purple-primary);">
+                <i class="fas fa-dollar-sign"></i> View Pricing
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
