@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Products - Just Enjoy AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header fade-in">
+        <h1 class="page-title">AI Products & Services</h1>
+        <p class="page-subtitle">Comprehensive AI solutions powered by cutting-edge technology</p>
+    </div>
+
+    <div class="products-grid">
+        <div class="card fade-in">
+            <div class="product-icon">
+                <i class="fas fa-robot" style="font-size: 3rem; color: var(--purple-primary);"></i>
+            </div>
+            <h3>AI Chatbots</h3>
+            <p>Intelligent conversational agents with natural language understanding, context awareness, and multi-turn dialog capabilities.</p>
+            <div class="features">
+                <span class="feature-tag">Natural Language Processing</span>
+                <span class="feature-tag">Context Awareness</span>
+                <span class="feature-tag">Multi-language</span>
+            </div>
+            <a href="/products/chatbot" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card fade-in">
+            <div class="product-icon">
+                <i class="fas fa-language" style="font-size: 3rem; color: var(--blue-accent);"></i>
+            </div>
+            <h3>Natural Language Processing</h3>
+            <p>Advanced text analysis, sentiment detection, entity recognition, and language understanding capabilities.</p>
+            <div class="features">
+                <span class="feature-tag">Sentiment Analysis</span>
+                <span class="feature-tag">Entity Recognition</span>
+                <span class="feature-tag">Text Classification</span>
+            </div>
+            <a href="/products/nlp" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card fade-in">
+            <div class="product-icon">
+                <i class="fas fa-eye" style="font-size: 3rem; color: var(--cyan-accent);"></i>
+            </div>
+            <h3>Computer Vision</h3>
+            <p>Image recognition, object detection, facial analysis, and visual content understanding powered by deep learning.</p>
+            <div class="features">
+                <span class="feature-tag">Object Detection</span>
+                <span class="feature-tag">Facial Recognition</span>
+                <span class="feature-tag">Image Classification</span>
+            </div>
+            <a href="/products/computer-vision" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card fade-in">
+            <div class="product-icon">
+                <i class="fas fa-microphone" style="font-size: 3rem; color: var(--green-accent);"></i>
+            </div>
+            <h3>Speech AI</h3>
+            <p>Speech-to-text, text-to-speech, voice synthesis, and audio processing with high accuracy and natural sound.</p>
+            <div class="features">
+                <span class="feature-tag">Speech Recognition</span>
+                <span class="feature-tag">Voice Synthesis</span>
+                <span class="feature-tag">Audio Processing</span>
+            </div>
+            <a href="/products/speech" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card fade-in">
+            <div class="product-icon">
+                <i class="fas fa-globe" style="font-size: 3rem; color: var(--orange-accent);"></i>
+            </div>
+            <h3>Translation Services</h3>
+            <p>Real-time language translation, document translation, and localization services supporting 100+ languages.</p>
+            <div class="features">
+                <span class="feature-tag">100+ Languages</span>
+                <span class="feature-tag">Real-time Translation</span>
+                <span class="feature-tag">Document Processing</span>
+            </div>
+            <a href="/products/translation" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card fade-in">
+            <div class="product-icon">
+                <i class="fas fa-magic" style="font-size: 3rem; color: var(--pink-accent);"></i>
+            </div>
+            <h3>Generative AI</h3>
+            <p>Content generation, image creation, code generation, and creative AI solutions for various media types.</p>
+            <div class="features">
+                <span class="feature-tag">Content Generation</span>
+                <span class="feature-tag">Image Creation</span>
+                <span class="feature-tag">Code Generation</span>
+            </div>
+            <a href="/products/generative-ai" class="btn btn-primary">Learn More</a>
+        </div>
+    </div>
+
+    <div class="cta-section fade-in">
+        <h2>Ready to Get Started?</h2>
+        <p>Choose the AI products that best fit your needs and start building intelligent applications today.</p>
+        <div class="btn-group">
+            <a href="/pricing" class="btn btn-primary">View Pricing</a>
+            <a href="/docs" class="btn btn-secondary">Read Documentation</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .product-icon {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .card h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .card p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-tag {
+        background: rgba(139, 92, 246, 0.2);
+        color: var(--purple-primary);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--purple-primary);
+        border: 2px solid var(--purple-primary);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+    }
+
+    .btn-secondary:hover {
+        background: var(--purple-primary);
+        color: white;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--secondary-bg), var(--accent-bg));
+        border-radius: 30px;
+        padding: 4rem 2rem;
+        text-align: center;
+        margin: 5rem 0;
+        border: 1px solid var(--border-color);
+    }
+
+    .cta-section h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .cta-section p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+</style>
+{% endblock %}

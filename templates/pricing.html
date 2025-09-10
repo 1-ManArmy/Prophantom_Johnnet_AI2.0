@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing - Just Enjoy AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header fade-in">
+        <h1 class="page-title">Simple, Transparent Pricing</h1>
+        <p class="page-subtitle">Choose the plan that fits your needs. Start free, scale as you grow.</p>
+    </div>
+
+    <div class="pricing-toggle fade-in">
+        <span>Monthly</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="pricing-toggle">
+            <span class="toggle-slider"></span>
+        </label>
+        <span>Annual <span class="discount-badge">Save 20%</span></span>
+    </div>
+
+    <div class="pricing-grid">
+        <div class="pricing-card starter fade-in">
+            <div class="plan-name">Starter</div>
+            <div class="plan-price">
+                <span class="price monthly-price">$0</span>
+                <span class="price annual-price">$0</span>
+                <span class="period">/month</span>
+            </div>
+            <div class="plan-description">Perfect for developers and small projects</div>
+            
+            <ul class="plan-features">
+                <li><i class="fas fa-check"></i> 1,000 API calls/month</li>
+                <li><i class="fas fa-check"></i> 3 AI models access</li>
+                <li><i class="fas fa-check"></i> Basic support</li>
+                <li><i class="fas fa-check"></i> API documentation</li>
+                <li><i class="fas fa-check"></i> Community forum access</li>
+            </ul>
+            
+            <a href="/signup" class="btn btn-outline">Get Started Free</a>
+        </div>
+
+        <div class="pricing-card professional fade-in popular">
+            <div class="popular-badge">Most Popular</div>
+            <div class="plan-name">Professional</div>
+            <div class="plan-price">
+                <span class="price monthly-price">$99</span>
+                <span class="price annual-price">$79</span>
+                <span class="period">/month</span>
+            </div>
+            <div class="plan-description">For growing businesses and teams</div>
+            
+            <ul class="plan-features">
+                <li><i class="fas fa-check"></i> 50,000 API calls/month</li>
+                <li><i class="fas fa-check"></i> All AI models access</li>
+                <li><i class="fas fa-check"></i> Priority support</li>
+                <li><i class="fas fa-check"></i> Advanced analytics</li>
+                <li><i class="fas fa-check"></i> Custom integrations</li>
+                <li><i class="fas fa-check"></i> Team collaboration tools</li>
+                <li><i class="fas fa-check"></i> 99.9% SLA guarantee</li>
+            </ul>
+            
+            <a href="/signup" class="btn btn-primary">Start Free Trial</a>
+        </div>
+
+        <div class="pricing-card enterprise fade-in">
+            <div class="plan-name">Enterprise</div>
+            <div class="plan-price">
+                <span class="price">Custom</span>
+            </div>
+            <div class="plan-description">For large organizations with specific needs</div>
+            
+            <ul class="plan-features">
+                <li><i class="fas fa-check"></i> Unlimited API calls</li>
+                <li><i class="fas fa-check"></i> All AI models + custom models</li>
+                <li><i class="fas fa-check"></i> Dedicated support manager</li>
+                <li><i class="fas fa-check"></i> Advanced security features</li>
+                <li><i class="fas fa-check"></i> On-premise deployment</li>
+                <li><i class="fas fa-check"></i> Custom SLA agreements</li>
+                <li><i class="fas fa-check"></i> Priority feature requests</li>
+                <li><i class="fas fa-check"></i> Training and onboarding</li>
+            </ul>
+            
+            <a href="/contact" class="btn btn-outline">Contact Sales</a>
+        </div>
+    </div>
+
+    <div class="pricing-faq fade-in">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>What happens when I exceed my API limit?</h4>
+                <p>You'll be notified when you approach your limit. You can upgrade your plan or purchase additional API calls at any time.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>Can I change my plan at any time?</h4>
+                <p>Yes, you can upgrade or downgrade your plan anytime. Changes take effect immediately, and billing is prorated.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>Is there a free trial for paid plans?</h4>
+                <p>Yes, all paid plans come with a 14-day free trial. No credit card required to start.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>What payment methods do you accept?</h4>
+                <p>We accept all major credit cards, PayPal, and wire transfers for enterprise customers.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>Do you offer discounts for nonprofits or students?</h4>
+                <p>Yes, we offer special pricing for educational institutions and nonprofits. Contact us for details.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h4>What's included in support?</h4>
+                <p>All plans include documentation and community support. Paid plans get email support with varying response times.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section fade-in">
+        <h2>Ready to Get Started?</h2>
+        <p>Join thousands of developers and businesses already using Just Enjoy AI.</p>
+        <div class="btn-group">
+            <a href="/signup" class="btn btn-primary">Start Free Trial</a>
+            <a href="/contact" class="btn btn-secondary">Talk to Sales</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .pricing-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin: 2rem 0 4rem 0;
+        font-weight: 600;
+    }
+
+    .toggle-switch {
+        position: relative;
+        width: 60px;
+        height: 30px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--border-color);
+        border-radius: 30px;
+        transition: 0.3s;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background: white;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    input:checked + .toggle-slider {
+        background: var(--purple-primary);
+    }
+
+    input:checked + .toggle-slider:before {
+        transform: translateX(30px);
+    }
+
+    .discount-badge {
+        background: var(--green-accent);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .pricing-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2.5rem;
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(20px);
+        position: relative;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .pricing-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--purple-primary);
+        box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+    }
+
+    .pricing-card.popular {
+        border-color: var(--purple-primary);
+        box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
+    }
+
+    .popular-badge {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .plan-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .plan-price {
+        margin-bottom: 1rem;
+    }
+
+    .price {
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .annual-price {
+        display: none;
+    }
+
+    .period {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .plan-description {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    .plan-features {
+        list-style: none;
+        text-align: left;
+        margin: 2rem 0;
+        padding: 0;
+    }
+
+    .plan-features li {
+        color: var(--text-secondary);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .plan-features i {
+        color: var(--green-accent);
+        font-size: 0.9rem;
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: var(--purple-primary);
+        border: 2px solid var(--purple-primary);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+    }
+
+    .btn-outline:hover {
+        background: var(--purple-primary);
+        color: white;
+    }
+
+    .pricing-faq {
+        margin: 5rem 0;
+    }
+
+    .pricing-faq h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 3rem;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+    }
+
+    .faq-item {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 2rem;
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(20px);
+    }
+
+    .faq-item h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .faq-item p {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--secondary-bg), var(--accent-bg));
+        border-radius: 30px;
+        padding: 4rem 2rem;
+        text-align: center;
+        margin: 5rem 0;
+        border: 1px solid var(--border-color);
+    }
+
+    .cta-section h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .cta-section p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--purple-primary);
+        border: 2px solid var(--purple-primary);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+    }
+
+    .btn-secondary:hover {
+        background: var(--purple-primary);
+        color: white;
+    }
+
+    /* Pricing toggle animation */
+    .pricing-toggle input:checked ~ .pricing-grid .monthly-price {
+        display: none;
+    }
+
+    .pricing-toggle input:checked ~ .pricing-grid .annual-price {
+        display: inline;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('pricing-toggle').addEventListener('change', function() {
+        const monthlyPrices = document.querySelectorAll('.monthly-price');
+        const annualPrices = document.querySelectorAll('.annual-price');
+        
+        if (this.checked) {
+            monthlyPrices.forEach(price => price.style.display = 'none');
+            annualPrices.forEach(price => price.style.display = 'inline');
+        } else {
+            monthlyPrices.forEach(price => price.style.display = 'inline');
+            annualPrices.forEach(price => price.style.display = 'none');
+        }
+    });
+</script>
+{% endblock %}

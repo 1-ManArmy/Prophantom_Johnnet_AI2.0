@@ -53,50 +53,236 @@ def create_app():
         """Homepage - Beautiful modern landing page"""
         return render_template('homepage.html')
 
-    @app.route('/agents-dashboard')
-    def agents_dashboard():
-        """Agent dashboard"""
-        return render_template('index.html')
+    # Product Pages
+    @app.route('/products')
+    def products():
+        """Products overview"""
+        return render_template('products/index.html')
     
-    @app.route('/platform')
-    def platform():
-        """Platform overview and services"""
-        return render_template('platform.html')
+    @app.route('/products/chatbot')
+    def products_chatbot():
+        """AI Chatbots"""
+        return render_template('products/chatbot.html')
     
-    @app.route('/use-cases')
-    def use_cases():
-        """Industries and use cases"""
-        return render_template('use_cases.html')
+    @app.route('/products/nlp')
+    def products_nlp():
+        """Natural Language Processing"""
+        return render_template('products/nlp.html')
     
+    @app.route('/products/computer-vision')
+    def products_computer_vision():
+        """Computer Vision"""
+        return render_template('products/computer_vision.html')
+    
+    @app.route('/products/speech')
+    def products_speech():
+        """Speech AI"""
+        return render_template('products/speech.html')
+    
+    @app.route('/products/translation')
+    def products_translation():
+        """Translation Services"""
+        return render_template('products/translation.html')
+    
+    @app.route('/products/generative-ai')
+    def products_generative_ai():
+        """Generative AI"""
+        return render_template('products/generative_ai.html')
+
+    # Solutions Pages
+    @app.route('/solutions')
+    def solutions():
+        """Solutions overview"""
+        return render_template('solutions/index.html')
+    
+    @app.route('/solutions/healthcare')
+    def solutions_healthcare():
+        """Healthcare solutions"""
+        return render_template('solutions/healthcare.html')
+    
+    @app.route('/solutions/finance')
+    def solutions_finance():
+        """Finance solutions"""
+        return render_template('solutions/finance.html')
+    
+    @app.route('/solutions/education')
+    def solutions_education():
+        """Education solutions"""
+        return render_template('solutions/education.html')
+    
+    @app.route('/solutions/retail')
+    def solutions_retail():
+        """Retail solutions"""
+        return render_template('solutions/retail.html')
+    
+    @app.route('/solutions/customer-support')
+    def solutions_customer_support():
+        """Customer Support solutions"""
+        return render_template('solutions/customer_support.html')
+    
+    @app.route('/solutions/marketing')
+    def solutions_marketing():
+        """Marketing solutions"""
+        return render_template('solutions/marketing.html')
+
+    # Pricing
     @app.route('/pricing')
     def pricing():
         """Pricing plans"""
         return render_template('pricing.html')
-    
+
+    # Documentation
     @app.route('/docs')
     def docs():
-        """API Documentation"""
-        return render_template('docs.html')
+        """Documentation overview"""
+        return render_template('docs/index.html')
     
-    @app.route('/blog')
-    def blog():
-        """Blog and news"""
-        return render_template('blog.html')
+    @app.route('/docs/api')
+    def docs_api():
+        """API Reference"""
+        return render_template('docs/api.html')
     
+    @app.route('/docs/sdks')
+    def docs_sdks():
+        """SDKs and Libraries"""
+        return render_template('docs/sdks.html')
+    
+    @app.route('/docs/tutorials')
+    def docs_tutorials():
+        """Tutorials and Guides"""
+        return render_template('docs/tutorials.html')
+
+    # Authentication & Account
+    @app.route('/signup')
+    def signup():
+        """Sign up page"""
+        return render_template('auth/signup.html')
+    
+    @app.route('/signin')
+    def signin():
+        """Sign in page"""
+        return render_template('auth/signin.html')
+    
+    @app.route('/dashboard')
+    def dashboard():
+        """User dashboard"""
+        return render_template('account/dashboard.html')
+    
+    @app.route('/account/profile')
+    def account_profile():
+        """User profile"""
+        return render_template('account/profile.html')
+    
+    @app.route('/account/billing')
+    def account_billing():
+        """Billing and payments"""
+        return render_template('account/billing.html')
+    
+    @app.route('/account/api-keys')
+    def account_api_keys():
+        """API keys management"""
+        return render_template('account/api_keys.html')
+
+    # Legal Pages
+    @app.route('/legal/terms')
+    def legal_terms():
+        """Terms of Service"""
+        return render_template('legal/terms.html')
+    
+    @app.route('/legal/privacy')
+    def legal_privacy():
+        """Privacy Policy"""
+        return render_template('legal/privacy.html')
+    
+    @app.route('/legal/cookies')
+    def legal_cookies():
+        """Cookie Policy"""
+        return render_template('legal/cookies.html')
+    
+    @app.route('/legal/security')
+    def legal_security():
+        """Security Policy"""
+        return render_template('legal/security.html')
+    
+    @app.route('/legal/compliance')
+    def legal_compliance():
+        """Compliance Information"""
+        return render_template('legal/compliance.html')
+
+    # Company Pages
     @app.route('/about')
     def about():
         """About us page"""
-        return render_template('about.html')
+        return render_template('company/about.html')
     
+    @app.route('/careers')
+    def careers():
+        """Careers page"""
+        return render_template('company/careers.html')
+    
+    @app.route('/blog')
+    def blog():
+        """Blog and insights"""
+        return render_template('company/blog.html')
+    
+    @app.route('/news')
+    def news():
+        """News and press releases"""
+        return render_template('company/news.html')
+    
+    @app.route('/partners')
+    def partners():
+        """Partner program"""
+        return render_template('company/partners.html')
+
+    # Support Pages
+    @app.route('/support')
+    def support():
+        """Support center"""
+        return render_template('support/index.html')
+    
+    @app.route('/support/contact')
+    def support_contact():
+        """Contact support"""
+        return render_template('support/contact.html')
+    
+    @app.route('/support/billing')
+    def support_billing():
+        """Billing support"""
+        return render_template('support/billing.html')
+    
+    @app.route('/support/technical')
+    def support_technical():
+        """Technical support"""
+        return render_template('support/technical.html')
+    
+    @app.route('/support/training')
+    def support_training():
+        """Training and education"""
+        return render_template('support/training.html')
+
+    # Community & Status
+    @app.route('/community')
+    def community():
+        """Developer community"""
+        return render_template('community.html')
+    
+    @app.route('/status')
+    def status():
+        """System status"""
+        return render_template('status.html')
+
+    # Contact
     @app.route('/contact')
     def contact():
-        """Contact and support"""
+        """Contact us"""
         return render_template('contact.html')
-    
-    @app.route('/dashboard')
-    def user_dashboard():
-        """User dashboard"""
-        return render_template('dashboard.html')
+
+    # Agent Dashboard (existing)
+    @app.route('/agents-dashboard')
+    def agents_dashboard():
+        """Agent dashboard"""
+        return render_template('index.html')
     
     # API Routes
     @app.route('/api/health')

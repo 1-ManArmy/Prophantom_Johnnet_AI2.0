@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}Solutions - Just Enjoy AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header fade-in">
+        <h1 class="page-title">Industry Solutions</h1>
+        <p class="page-subtitle">Tailored AI solutions for every industry and business need</p>
+    </div>
+
+    <div class="solutions-grid">
+        <div class="card solution-card fade-in">
+            <div class="solution-icon">
+                <i class="fas fa-heartbeat" style="font-size: 3rem; color: var(--red-accent);"></i>
+            </div>
+            <h3>Healthcare</h3>
+            <p>AI-powered healthcare solutions for patient care, medical analysis, diagnostic assistance, and clinical decision support.</p>
+            <ul class="solution-features">
+                <li>Medical image analysis and diagnostics</li>
+                <li>Patient data processing and insights</li>
+                <li>Clinical decision support systems</li>
+                <li>Drug discovery and research assistance</li>
+            </ul>
+            <a href="/solutions/healthcare" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card solution-card fade-in">
+            <div class="solution-icon">
+                <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--green-accent);"></i>
+            </div>
+            <h3>Finance</h3>
+            <p>Financial AI solutions for risk assessment, fraud detection, algorithmic trading, and customer service automation.</p>
+            <ul class="solution-features">
+                <li>Fraud detection and prevention</li>
+                <li>Risk assessment and management</li>
+                <li>Algorithmic trading and analysis</li>
+                <li>Customer service automation</li>
+            </ul>
+            <a href="/solutions/finance" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card solution-card fade-in">
+            <div class="solution-icon">
+                <i class="fas fa-graduation-cap" style="font-size: 3rem; color: var(--blue-accent);"></i>
+            </div>
+            <h3>Education</h3>
+            <p>Educational AI solutions for personalized learning, content creation, assessment automation, and student support.</p>
+            <ul class="solution-features">
+                <li>Personalized learning platforms</li>
+                <li>Automated grading and assessment</li>
+                <li>Educational content generation</li>
+                <li>Student performance analytics</li>
+            </ul>
+            <a href="/solutions/education" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card solution-card fade-in">
+            <div class="solution-icon">
+                <i class="fas fa-shopping-cart" style="font-size: 3rem; color: var(--purple-primary);"></i>
+            </div>
+            <h3>Retail</h3>
+            <p>Retail AI solutions for inventory management, customer insights, recommendation engines, and sales optimization.</p>
+            <ul class="solution-features">
+                <li>Smart inventory management</li>
+                <li>Personalized product recommendations</li>
+                <li>Customer behavior analysis</li>
+                <li>Dynamic pricing optimization</li>
+            </ul>
+            <a href="/solutions/retail" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card solution-card fade-in">
+            <div class="solution-icon">
+                <i class="fas fa-headset" style="font-size: 3rem; color: var(--orange-accent);"></i>
+            </div>
+            <h3>Customer Support</h3>
+            <p>AI-powered customer support solutions for automated responses, ticket routing, and customer satisfaction improvement.</p>
+            <ul class="solution-features">
+                <li>Intelligent chatbots and virtual assistants</li>
+                <li>Automated ticket classification and routing</li>
+                <li>Sentiment analysis and customer insights</li>
+                <li>24/7 multilingual support</li>
+            </ul>
+            <a href="/solutions/customer-support" class="btn btn-primary">Learn More</a>
+        </div>
+
+        <div class="card solution-card fade-in">
+            <div class="solution-icon">
+                <i class="fas fa-bullhorn" style="font-size: 3rem; color: var(--pink-accent);"></i>
+            </div>
+            <h3>Marketing</h3>
+            <p>Marketing AI solutions for content creation, campaign optimization, audience targeting, and performance analytics.</p>
+            <ul class="solution-features">
+                <li>Automated content generation</li>
+                <li>Audience segmentation and targeting</li>
+                <li>Campaign performance optimization</li>
+                <li>Social media management</li>
+            </ul>
+            <a href="/solutions/marketing" class="btn btn-primary">Learn More</a>
+        </div>
+    </div>
+
+    <div class="case-studies-section fade-in">
+        <h2>Success Stories</h2>
+        <p>See how organizations across industries are transforming their operations with our AI solutions.</p>
+        
+        <div class="case-studies-grid">
+            <div class="case-study">
+                <h4>Healthcare Provider</h4>
+                <p>Reduced diagnostic time by 60% using AI-powered medical image analysis</p>
+                <span class="metric">60% faster diagnostics</span>
+            </div>
+            <div class="case-study">
+                <h4>Financial Institution</h4>
+                <p>Prevented $50M in fraudulent transactions with AI fraud detection</p>
+                <span class="metric">$50M fraud prevention</span>
+            </div>
+            <div class="case-study">
+                <h4>E-commerce Platform</h4>
+                <p>Increased sales by 35% with personalized recommendation engine</p>
+                <span class="metric">35% sales increase</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section fade-in">
+        <h2>Ready to Transform Your Industry?</h2>
+        <p>Contact our solution experts to discuss how AI can revolutionize your business operations.</p>
+        <div class="btn-group">
+            <a href="/contact" class="btn btn-primary">Contact Sales</a>
+            <a href="/demo" class="btn btn-secondary">Request Demo</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .solutions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .solution-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .solution-icon {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .solution-card h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .solution-card p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .solution-features {
+        list-style: none;
+        margin: 1.5rem 0;
+        padding: 0;
+    }
+
+    .solution-features li {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .solution-features li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--green-accent);
+        font-weight: bold;
+    }
+
+    .case-studies-section {
+        margin: 5rem 0;
+        text-align: center;
+    }
+
+    .case-studies-section h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .case-studies-section p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
+    }
+
+    .case-studies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .case-study {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 2rem;
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(20px);
+        text-align: left;
+    }
+
+    .case-study h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+    }
+
+    .case-study p {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .metric {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--secondary-bg), var(--accent-bg));
+        border-radius: 30px;
+        padding: 4rem 2rem;
+        text-align: center;
+        margin: 5rem 0;
+        border: 1px solid var(--border-color);
+    }
+
+    .cta-section h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--purple-primary), var(--blue-accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .cta-section p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--purple-primary);
+        border: 2px solid var(--purple-primary);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+    }
+
+    .btn-secondary:hover {
+        background: var(--purple-primary);
+        color: white;
+    }
+</style>
+{% endblock %}
