@@ -49,8 +49,13 @@ def create_app():
     
     # Main routes
     @app.route('/')
-    def home():
-        """Homepage - The sovereign gateway"""
+    def index():
+        """Homepage - Beautiful modern landing page"""
+        return render_template('homepage.html')
+
+    @app.route('/agents-dashboard')
+    def agents_dashboard():
+        """Agent dashboard"""
         return render_template('index.html')
     
     @app.route('/platform')
@@ -89,7 +94,7 @@ def create_app():
         return render_template('contact.html')
     
     @app.route('/dashboard')
-    def dashboard():
+    def user_dashboard():
         """User dashboard"""
         return render_template('dashboard.html')
     
